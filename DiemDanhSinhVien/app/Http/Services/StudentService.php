@@ -8,6 +8,19 @@ use Illuminate\Support\Facades\DB;
 
 class StudentService
 {
+
+    public function layThongTin($request)
+    {
+        $user = $request->input('user');
+        $infoPerson = DB::table('sinhviens')
+            ->join('lops', 'lops.malop', 'sinhviens.malop_id')
+            ->join('khoas', 'khoas.makhoa', 'lops.makhoa_id')
+            ->where('sinhviens.masv', $user)
+            ->select('masv', 'tensv', 'gioitinh', 'ngaysinh', 'diachi', 'malop', 'tenkhoa', 'anh')
+            ->get();
+        return $infoPerson;
+    }
+
     public function layLichHoc($request)
     {
         $user = $request->input('user');
@@ -35,6 +48,25 @@ class StudentService
             ->get();
 
         return $lichHoc;
+    }
+
+    public function GetListSubject($request)
+    {
+        $user = $request->input('user');
+        $listDetailSubject = DB::table('giangvien_monhoc_sinhvien')
+            ->join('giangvien_monhoc', 'giangvien_monhoc.mahp', 'giangvien_monhoc_sinhvien.mahp_id')
+            ->join('giangviens', 'giangviens.magv', 'giangvien_monhoc.magv_id')
+            ->join('monhocs', 'monhocs.mamh', 'giangvien_monhoc.mamh_id')
+            ->where('giangvien_monhoc_sinhvien.masv_id', $user)
+            ->get();
+        return $listDetailSubject;
+    }
+
+    public function GetDateSchedule()
+    {
+        $dates = DB::table('cahoc_giangvien_monhoc')
+            ->get();
+        return $dates;
     }
 
     public function findAttendance($request)

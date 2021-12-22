@@ -14,10 +14,13 @@ class CreateMonhocsTable extends Migration
     public function up()
     {
         Schema::create('monhocs', function (Blueprint $table) {
-            $table->string('mamh', 10)->primary();
+            $table->string('mamh', 10);
             $table->string('tenmh', 255);
+            $table->string('ghichu');
+            $table->string('loai');
             $table->tinyInteger('sotinchi');
             $table->string('makhoa_id', 10);
+            $table->primary(['mamh']);
             $table->foreign('makhoa_id')->references('makhoa')->on('khoas');
             $table->timestamps();
         });

@@ -26,22 +26,15 @@ class TeacherController extends Controller
     // hien thi lich
     public function store(Request $request)
     {
-        //dd($request->input());
-        // kiem tra la giang vien hay sinh vien
-        if ($request->input('user') == '2001180153') {
-            $user = $this->teacherService->layThongTin($request);
-            $lichDay = $this->teacherService->layLichDay($request);
-            $date = date('Y-m-d');
-            return view('teacher.schedule', [
-                'title' => 'Thông tin giảng viên',
-                'data' => $lichDay,
-                'ngay' => $date,
-                'user' => $user
-            ]);
-        }
-        // sinh viên
-        else {
-        }
+        $user = $this->teacherService->layThongTin($request);
+        $lichDay = $this->teacherService->layLichDay($request);
+        $date = date('Y-m-d');
+        return view('teacher.schedule', [
+            'title' => 'Thông tin giảng viên',
+            'data' => $lichDay,
+            'ngay' => $date,
+            'user' => $user
+        ]);
     }
 
 

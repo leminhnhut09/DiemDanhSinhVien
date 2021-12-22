@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
-
     protected $loginService;
     public function __construct(LoginService $loginService)
     {
@@ -31,21 +30,20 @@ class LoginController extends Controller
             'email' => $request->input('username'),
             'password' => $request->input('password')
         ], $request->input('remember'))) {
-            // Đăng nhập thành công
-            // Student
-            // if ($request->input('username') == "2001180152")
-            //     return redirect()->route('student.home', ['user' => $request->input('username')]);
-            // // Teacher
-            // else
-            //     return redirect()->route('teacher.index', ['user' => $request->input('username')]);
             $quyen = $this->loginService->checkAdmin($request);
             if ($quyen[0]->name == 1)
-                return redirect()->route('teacher.index', ['user' => $request->input('username')]);
-            // Teacher
-            else
+                return redirect()->route(
+                    'teacher.index',
+                    [
+                        'user' => $request->input('username'),
+                        'quyen' => $quyen[0]->name
+                    ]
+                );
+            else if ($quyen[0]->name == 2) {
+                return redirect()->route('admin.home');
+            } else
                 return redirect()->route('student.index', ['user' => $request->input('username')]);
         }
-        // Đăng nhập thất bại
         Session()->flash('error', 'Email hoặc mật khẩu không đúng !');
         return redirect()->back();
     }

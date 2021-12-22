@@ -1,3 +1,15 @@
+<?php
+function getDateSchedule($dates, $mahp, $tuan)
+{
+    foreach ($dates as $date) {
+        if ($date->tuan == $tuan && $date->mahp_id == $mahp) {
+            echo $date->ngay;
+            break;
+        }
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html>
 
@@ -47,6 +59,11 @@
                 }
             }
 
+            table,
+            th {
+                width: auto;
+            }
+
         </style>
         <!-- Header -->
         <header class="header">
@@ -72,7 +89,7 @@
 
                     <div class="user-account dropdown">
                         <div class="user-info" data-toggle="dropdown">
-                            <img class="user-account-img" src="/images/{{ $data[0]->anh }}" style="width:
+                            <img class="user-account-img" src="{{ $data[0]->anh }}" style="width:
                             30px;height: 30px;border-radius: 50%
                             !important;object-fit: cover;" />
                             <a class="user-account-name" href="#" title="">{{ $data[0]->tensv }}</a>
@@ -187,8 +204,8 @@
                                         <div class="row">
                                             <div class="col-sm-3">
                                                 <div class="profile-userpic">
-                                                    <img src="/images/{{ $data[0]->anh }}" alt=""
-                                                        class="img-responsive" style="object-fit:cover;">
+                                                    <img src="{{ $data[0]->anh }}" alt="" class="img-responsive"
+                                                        style="object-fit:cover;">
                                                 </div>
 
 
@@ -301,7 +318,7 @@
                                                     <div
                                                         class="desc
                                                             clearfix">
-                                                        <div class="number">0</div>
+                                                        <div class="number">{{ $numSubject }}</div>
                                                         <div
                                                             class="icon-menu
                                                                 text-right">
@@ -348,490 +365,138 @@
                             </div>
                         </div>
                     </div>
-
                     <!-- List column methods -->
-                    <div class="featured">
-                        <div class="featured-item">
-                            <a href="#" title="Ghi chú nhắc nhở" langid="menusinhvien-6-title">
-                                <div class="box-df">
-                                    <div class="icon">
-                                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAYCAYAAADpnJ2CAAABl0lEQVRIie3WP2sVQRSG8d9cNwn+6Qy2goU2io0YtLAXQWJhKbiFVinUTrCzUARt1DTCTuEHECttk3SCja1lUGwURBSTaMZid8MS7nXnRpNCfGFhZ8+885w9e2bYoEoydQ/nEdCa2vsXqXQ9Z5EiE/YQc3jWgXV1LUTTqXTpbwEv4Amubg6kkhDN4zL5wEM4YHj2CZM4ilPqMm4oRAnHEUJ0cnO8nYaPqfQ2qNJt3OpJbBW7mmuYfuIHpnrWeRBUKeEmno7IDr43scnfJLSO3SPiCbN41JZ0Ce96shu+Upk3L0SLMGjG+7cCG1PTWG+B47xdwF3cN7rEw7SMQYE1XMFMhukrbuCwuknOhegO9mZ4j2AlqNIXdXetGd001B9+T3PfzlvFBL5leAusFNiHs3iZkeUZLOCYunMnMJtKz/uMITqNpbZLcw/URTzGm2Ycc2BdtcC+DdvVHKL6EHg1hm+qCxxXr7fo29iHO6b/wH8HmP1j8wdKXeD7HQAuYxBU6TM+qU+R7dQMDhY4gfnmwXaVNuADLv4Co1ZbwkqTYWcAAAAASUVORK5CYII="
-                                            alt="">
-                                    </div>
-                                    <span lang="menusinhvien-6">Nhắc nhở</span>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="featured-item">
-                            <a href="#" title="Kết quả học
-                                    tập" langid="menusinhvien-7-title">
-                                <div class="box-df">
-                                    <div class="icon">
-                                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAACdElEQVRIib3WSahOYRwG8N+RoUghs40hazJ0S6YbSuKKpCzIEYVYKDYWhlKElGsoC06mWFGmkmlPGUpZWAklESHcDMfifT+Oe+/3Odz7eep03nP+b+/z/p//8w6JY7mOIE/b/59keuIqJuMuGvPUuy4dYquNKxiDpRiCm1BPwgbsy1OnsAPjoWsdCW9ja5KZiDk4RPkMh2I5RpTpnGR2YSoOYzh25Kl1lMtwOm7ha+w/WzBDNbLd2IT5eepC63iZDM8JBuiGE7QdJMn0iu89kaypPbKyhF/wMbYfojue4CAak8wtfEgyT7AR8/LUxWqD/YlwBQZiEd5jN9biIuYLVh+KZUhwJ09dqjVgrRoejYRrcA0LcAP3YnwdcpzOUyeTTG/RiZBkVmExBuMVzuep5iLhDCyJg6/EzPjciPG97UxqJ7YnmQYF60c044NguAbsR3NF0mW4jiacxRQMKpBVw+b4jFKwfkQLtuSpxdgQv39KehxHsBpbsB4v/0AG8tTOmGlrtAhywrDWhM8xLgYmaVvbvvHfV7wpM5FqqEg6C6PxDNPQWOhzRij6S7ymuuX/hvCRYP9Z6I/7hT5NuIy5OB3f/4yidF8E47RGi2Cey+iNhYXYqiRra/1ahGV3mn6xPUCoYwXNGCsoNFKwfk109Dxs1/q1UJG0n2CanviMx4JEZQjbWL8M4Xnh/PouZH1PWCadjoqkE3BAmOU24S5SF1QIPwmL/wWe+nUc1Y3wm1A/6CVIW1fC/4Zihm9j+7XfM+zUWFfhvjhEuCE/EM7FPsLlSZlYkv2KJVnN2ITEsfyBsEt0jxP4JqzFSk0/okcnxFrw9AcL/rqKbZW/OQAAAABJRU5ErkJggg=="
-                                            alt="">
-                                    </div>
-                                    <span lang="menusinhvien-7">Kết quả học
-                                        tập</span>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="featured-item">
-                            <a href="#" title="Lịch theo
-                                    tuần" langid="menusinhvien-8-title">
-                                <div class="box-df">
-                                    <div class="icon">
-                                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAYAAACpSkzOAAACWUlEQVRIiaXWS6hNYRgG4Geds3NPqHOOMKPcSso9nYwwITOFDPYhSScDZSAGDAyZmBhZGBgxEEUpJZESCrmLk5Brromjswz+f2fb1lr7XN7Junzv/t71/f+33+9PHMkU4CCmYG0RAbJquCapo/iSVW3P41VKcszHtDKRBizB26JgTWgiUsxBgk5ciT9sw83I/a/8JNWHRZH/PklNwvUYfoCurKqnEkVe4z4O4Cs+oAPt+I598QOSBp2a8OfIbcEX7MUYbMTzJDUtcSS7heGY1ZDkqrB07UXLwT979BTvsqrFDRVfQ1sFc7E0J8cOjC4TaUAXenPeb8adCn7jXg7h2gBEZFWXCkIP8LmCXziMlwNJXEOSNqW0I6mgDwsw0/+bPVRkGFUTGoYVeDqoTNXyeJLqwMOWqNo2GJF+op3Q99BaQhyP6UXBJNWapKXd2VovVIRuwR1u4obwJ6zHFPRgQ5M8pUKrcAibsBCTcLEuPgsvMFk/mqjMVLfgLo7H5048jkkznMOpKDR5KEJbBc+roRsf/fW31bgdP2bkUIReYTbOYgLGYkZd/Ha8jhfcpRTNmuERThCGGlbmcJqKUF7RemGpdsfnCzgj2NWv/iSvR1lFG4QNr2FEAa8X75oJlVXUhSe4LLj7Fuz3t5ptwryaiu1xsp7Mqvmu3yK0a95SvBEc4Ycwqruxpy4+D8txGs/ifV6b99YqGiZ/YBE6b0VBbBPNTRU/MaoFn7CrKX3w2Im+CtbgknDAOIpvBjCXCgZfbQ6tE/Z2dRIPkMtwDOPkHKmGgO/YnFWd/wNTFIxht3/xrgAAAABJRU5ErkJggg=="
-                                            alt="">
-                                    </div>
-                                    <span lang="menusinhvien-8">Lịch theo
-                                        tuần</span>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="featured-item">
-                            <a href="#" title="Lịch theo
-                                    tiến độ" langid="menusinhvien-9-title">
-                                <div class="box-df">
-                                    <div class="icon">
-                                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAABrklEQVRIic3Wv2sUQRjG8c/GVYPRlEYFUVTE0sLCwsoijYKViJ3b2Po/qJ2FtRZ3jWAKISBEsLC4Io2NgqCNjUiCP2KhSaPe3VjMLsixd7v3I8c9zbLPLO93Z9535p1EI0ATt+yuVkLmZooV3MA1bGEBX3ASH3Es90ZVwBE8TpoW0xx2GQn+4hXu4CHu4gG2+0bL6lGTpu9YncvfX+MnfqCLz7n/CTvDTGeA1iHRCH/wFKvYj4PYwBl8wHEcGhMWcBa3E42wjRS/xWXdDQXsQzsVZ3QFL0aKVD+Hl9AqctgeBTakOkgK4PwUgPMIc5WfTVhpiXca91DrZ5Jm36Eu7ofM+yrgAVzsMzaMOljsNcuCvsOpulHrVmmhqedwJormPNawVzwhBqpP0STi3r4esniGDgJ+wyPsqYJVqIvNXrMMuCm2pVqa+aIpm+ECLohLOk4OO3gTMr+qgOfwUiyacdTGMlpVwLc4YTK9cavXKAN28LVuxJkvmgI4qYvSIO34rwEfnQLwMJIUz/EkNzfyZ+2CGdAPCwUsiRfuVireuJ/l0M6wwBoK4p5eC5mr/wB2R2CZO4fmIgAAAABJRU5ErkJggg=="
-                                            alt="">
-                                    </div>
-                                    <span lang="menusinhvien-9">Lịch theo
-                                        tiến độ</span>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="featured-item">
-                            <a href="#" title="Chương
-                                    tr&#236;nh khung" langid="menusinhvien-14-title">
-                                <div class="box-df">
-                                    <div class="icon">
-                                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAASCAYAAAC0EpUuAAABeUlEQVQ4jZXTPWsUYRQF4Gfi+IFFQAl2Qd2B2KUWAiIpVKI2QuwsZMHaH+FvkCXMgKRMEUhAk0IbCxNIpU0QXS1iZSGKCH5lJ8XMkDfjrjtzurn33HPPe++dqJPm67itHb5gEvGQ3GZcCj7FOqKGoj3sIA1qclzHnarTYzxr4bSHFSz1u4fBJLMbil7DpxZO4TJmk+yI0wWIOmn+FjMtxMbhQ4xLiqGfKLs1wfeSfyqoifCn3/UtxjzmcCYoeo+TmG7p8muS2Yrxogx8LrvlOFeLNZn1oKqrFnUfTwLCHt7g5jil2vYXsTJRfu/XuLnm8w2xT7H9qvgjJkqxC7VYEwxwkeL5t3AVZwPCO8V2z7d0uoqXUSfNKTZ93P+f/EvxvNMj8hH+9rt+xniN2ZaORiLJ7MalYA/LRs9vgEcOb7pyVufcxcPqpNawNcbENq7gVRisndSxUPQBpoZ0r5ArbjbGvTCRZP9wRJ0038CNMS7hN344+jsPw/MDRVBZilfLo0cAAAAASUVORK5CYII="
-                                            alt="">
-                                    </div>
-                                    <span lang="menusinhvien-14">Chương
-                                        tr&#236;nh khung</span>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="featured-item">
-                            <a target=_blank href="#" title="Đăng k&#253; học phần" langid="menusinhvien-15-title">
-                                <div class="box-df">
-                                    <div class="icon">
-                                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAYCAYAAADpnJ2CAAADU0lEQVRIia3WbYhWRRQH8N88rlEaBS4lViYWtZDmhzIq6AVJC0wUpFxCyiaK2gRfSkrcKMosrKygFzXIa4EUfjDNisoy2FqhsEhdIi1IV0uxIAV7Mavpw9yN62Ou+1QH7ofLnDn/OXP+538mWJY0aDdjKfqjLUVLG9lca8C3Fd+iwHN4DEtC4ftQuPH/BLwaX+FVbMRQ3IW5GIL1eDkUukNhwn8BvBxdeAffoAWTsKvisydFrRiOz7E2FLaFwthGAC9AJzpwAKPLLLcdLUiKtqdoIkZhN9aFwiehcGlvgOfgPXyKE8sMLyn/+2Qp2pKiK3ExAjaEQkcojOzxCZal4Wgrv12YgzcbADmqhcJVeKpMZgkWB8vSAQzEQ3igr0B9AawAz8aTSDVMxirciddwdqOgvQANDYWVmIe1mNCEd8uvBW/ha7wiU3/PvwRqxhOySOzC2BRt4nDSnC5ndwPGymx7ESc3ADQgFJ7HD3ILxRQNRXMo9OsBvAfbyxP1lxv8VJlE12MfFuH4XoCaQmEBfiqzmp2iQSlaXroswM5QuK+GGRiGD3GoEmcJTpJZOwO/YP4/gLWX++ahPUUDUvR0ndv7sirNruEM3CJr5SFHMnVRmfl8tONX3IppsjA8jIVoStEjdYe5NxQOyoS8PUXNoW5aPIj7cVDWyvqTNuFxzCr/F2NOin6uA2or/QZiYYrm/r1WAl6D23AdTsCjmIn9co1fqAM+Df2ws9qHoTCtBDpFLsncFO0vW2NFitbU8DHelqWIXKtZGITX5dm3RyZQj32HnRWgSaHQjeX4AINT1Jai/ZWYq0NhUw1f4HcMxsRK0B9xk9wuHViJHbi24jMuFLZhtTwthqWoNUV7K4cZX8b4E101RHnG7cUabC2vuJrNFFkYvsQbMqPXy4KxGyNTNDFF3RWgMaGwWdbl38rDTK0nTQuelRt/C+7ABofbKKzAcZiaoo3VxVAYLdfvQnwkP0O6etab6oJtxThcJDO0s9w0E5+VPptxft0+oTACz2CMPNIuS1HnEX7HeERdIVP/PPn6pstaW7Uz5TfOBPkpMj1F644W8Fhvmg6MwHicVQZcJdd8iCzyO+SMJ6fo3N7AOHaG9TZFvrZ9+EPW3LtT9FJfA/wFQAIJ7FVYOrIAAAAASUVORK5CYII="
-                                            alt="">
-                                    </div>
-                                    <span lang="menusinhvien-15">Đăng
-                                        k&#253; học phần</span>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="featured-item">
-                            <a href="#" title="Tra cứu
-                                    c&#244;ng nợ" langid="menusinhvien-20-title">
-                                <div class="box-df">
-                                    <div class="icon">
-                                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAcCAYAAABoMT8aAAAB0UlEQVQ4jZ3VTYjNURgG8N9cN8Og8f0RkZ3FZKhBiYWFWbExZWJBYoWyk2ywoGRhIhbyUSMbZKOUxsaERAlLxCxkJcQdRt0xFu/5c437/WzOR+/7nHOe9znntLg8pgouYBq2VQrIV8vGMsysFlCOYAp2YgM6MQG3cB/9+FwanBuXfA4FnMHS1C9gEU7hE65UIniNvdiPVnThAV5iNSZiD3bgQxr/IXicVpyUdjGa5tsxtWSRS+lIrXiRadCNNZiDn2U0KYeF+IHeHA7jFT7WmQwj+ILTecwS4jSKY5ibx400aBR9hIgn0sTFJkjkUcRGDGAydoszwphQvSKyMt7DOvQIda+jI/WriltqpIfCB4dEWZ9jE2YLU9UkyHASS4T7nmAlnuItDtRDkOEZhjCIFWlHfeJurK+HAOahTdh2i7D1nUTaXQ/B6LjxMLbiPO6irRZBJexL7ZEcjuJgEyQD2JwT9/t4EwTTMZwTpcn7997Xg1U4m8NtofL7BpKH8A79mYhdwv9FbC8J/CrqnqEH38QT0MnfMhYxH1dxDd/xCGuxXLyNBdwUPmhPRP/5YBcWCFELmCHEGhGv8mL04leW0FLjZxoUH0tHpYBaP9MbNarzG3VVYP2cWKHIAAAAAElFTkSuQmCC"
-                                            alt="">
-                                    </div>
-                                    <span lang="menusinhvien-20">Tra cứu
-                                        c&#244;ng nợ</span>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="featured-item">
-                            <a href="#" title="Thanh
-                                    to&#225;n trực tuyến" langid="menusinhvien-21-title">
-                                <div class="box-df">
-                                    <div class="icon">
-                                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAYCAYAAAD3Va0xAAABpUlEQVQ4jZ3UO2hUURAG4G/NgkoUxSD4AmG1E0vRxhQ+CzsRwTYRRG3sVLCw8YGdjWmMtYIKNhau4KOxsrKUYKUYNERJ1KAmsThzzHLZPat34DLnzsz57//fmXMarduL2/EQO/W3aczhBF7AxGhKNPEMW3AHn7GARsfmZViDw9gasec4hHYuagbIGM70YXMZl7AxgJ7gIJ7mrwkmsNjjybkBfMIOfEB727gDmZGgLr442LG5gR+xXlVhuBlvAmw4A60Of6UgbSj8JnzBd+zHBNpZ2uQ/SHsd/j2+RXwymA5kRivD3wiZndJmYz0ezHPnSB0eRqsq7XxB2hyud4lfxcUsbb4A0M+GWGp/yU7rP2N/21+yWxXf1UqM1uNlx/sMdtVhdB97MYIN0tmaqQPUCn9PGr5rhdqitOP4aWn4agO9wnLp7nmMC9JQ/jcQrMNdHJEmfKQO0B5MScM6K52pc3WA3mI0agZxDDd7Feeu/e6Sm5Ku31MB9qAHxnwn0EKB2e5CDn5loI84ixXBrFEp/Cq1f20lnq/ek5huYh8eSf+jjr3D0T+DjmL+E9i22QAAAABJRU5ErkJggg=="
-                                            alt="">
-                                    </div>
-                                    <span lang="menusinhvien-21">Thanh
-                                        to&#225;n trực tuyến</span>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="featured-item">
-                            <a href="#" title="Thanh
-                                    to&#225;n nội tr&#250;" langid="menusinhvien-22-title">
-                                <div class="box-df">
-                                    <div class="icon">
-                                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAYCAYAAAD3Va0xAAABpUlEQVQ4jZ3UO2hUURAG4G/NgkoUxSD4AmG1E0vRxhQ+CzsRwTYRRG3sVLCw8YGdjWmMtYIKNhau4KOxsrKUYKUYNERJ1KAmsThzzHLZPat34DLnzsz57//fmXMarduL2/EQO/W3aczhBF7AxGhKNPEMW3AHn7GARsfmZViDw9gasec4hHYuagbIGM70YXMZl7AxgJ7gIJ7mrwkmsNjjybkBfMIOfEB727gDmZGgLr442LG5gR+xXlVhuBlvAmw4A60Of6UgbSj8JnzBd+zHBNpZ2uQ/SHsd/j2+RXwymA5kRivD3wiZndJmYz0ezHPnSB0eRqsq7XxB2hyud4lfxcUsbb4A0M+GWGp/yU7rP2N/21+yWxXf1UqM1uNlx/sMdtVhdB97MYIN0tmaqQPUCn9PGr5rhdqitOP4aWn4agO9wnLp7nmMC9JQ/jcQrMNdHJEmfKQO0B5MScM6K52pc3WA3mI0agZxDDd7Feeu/e6Sm5Ku31MB9qAHxnwn0EKB2e5CDn5loI84ixXBrFEp/Cq1f20lnq/ek5huYh8eSf+jjr3D0T+DjmL+E9i22QAAAABJRU5ErkJggg=="
-                                            alt="">
-                                    </div>
-                                    <span lang="menusinhvien-22">Thanh
-                                        to&#225;n nội tr&#250;</span>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="featured-item">
-                            <a href="#" title="Phiếu
-                                    thu tổng hợp" langid="menusinhvien-23-title">
-                                <div class="box-df">
-                                    <div class="icon">
-                                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAYCAYAAAD3Va0xAAABaElEQVQ4jaXUv0ocURTH8c9mNxKFrZLGRDConQi+gEJiNg+QznqtjC8gWFiJtRjSaB5BSJsNJFY2KdOKCBsRQtgmoMF1N8XehetkrjtDfs059993zu/OnKnMHPTncIQFo9XBNVZxDKfNwUINXzCFD+jiQQ6gh9d4HsZfw7g13FALkPdYH1HNNrYwGUCf0MBn0dP7BWw9QRU/MY8LtGYPvYpBDwuAKpnxM3wPsKW8+0hpLMSnmAj5Cn6jVSsBaof4I2etWwa0hz+YjuZ6WMZMGVAHuznzO9gsc0cpPSb/48tqHRujNhWx9i7E/f8FtRWovIi1vkEPco/NVEXjIV6FeBNi0mYKdBLiYoAM2+NcwkUKNBvlPXebO7fBU6BfUZ5t1lylQGOZvBLlpazVo8P16HDd4J+UBHUz8y8iUCPKX/rX6m0M6mUWvxXIh7oZgi7xFo9CZYUu1+DtVbGGTi2U+xHNgoCszvDmL10iQd6WN1YNAAAAAElFTkSuQmCC"
-                                            alt="">
-                                    </div>
-                                    <span lang="menusinhvien-23">Phiếu thu
-                                        tổng hợp</span>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="featured-item">
-                            <a href="#" title="Hộp thư sinh viên" langid="menusinhvien-46-title">
-                                <div class="box-df">
-                                    <div class="icon">
-                                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAACIklEQVQ4jZXUTYiNYRQH8N877tgg5dsoai6JLCbNnqwkCSXCQl0LzEaZomQrmfKxGWSuFaOmFFlQvjY+CkWzUNRdSIybr5GPxoxxLZ7njrfXvXM59fS8z/uc8z/n/J9zTtLaU9FAduEIpuIbDuJk9bJU+NugqQHgBZxCLzbgLE7g0ni2ucx5BdrQjL2Yhxu4ju+4hTw2ooyj+aIR9JcKbldBklT6K3En4+QDEkxL/fuEX5ie0V1TKriWjXRR3OfgK0bjeUKNDNN3zdHRUgJompftMYKy8CBDcX2rscbuSgWDGMbmfFFSTX8G+jEXA2iNBu0Cd/XkKh7EwJ5jYYx4WQ4Po6cu7E6l24YDqFVzCd6mQGcJZbYaj5PWnkoFi6PSZ0wROP1XyWEEC/ADb3Px4xLu4gt+RuVtMXqZaJO4H0JReLRP8bwcwzkMYllcHwU+4Y1QYvXSfw2lgkq+6Ct2xrty0tpTGcEOgZdj6EbHf6TfhU6hfV+gt0ngpAnHI9ieSMXEBmCJ0GGd2FcqOCxQ0Vwt/tlx78ZT3BPasj2es7IEjzAJq0qFsU5s4U/xj6YM7mMmXuIJNmUA1+KZUCktKUDiI9ebNO+FwXERfbgi8N4nFP1lYdgM1DLOTqmsbMVNnME6oRI6BJrqSjXS8Sb1OWFozI/64wFW0qDvGkQMr/5Bp8yf9PdjcvSU1LOoJfniWISJ2AA5rMd5nP4fsDoyhC2/Ac3ZmT6WouV7AAAAAElFTkSuQmCC"
-                                            alt="">
-                                    </div>
-                                    <span lang="menusinhvien-46">Hộp thư
-                                        sinh vi&#234;n</span>
-                                </div>
-                            </a>
-                        </div>
-
+                    <div style="width:100%; min-height:auto; min-width: auto; overflow-x:auto; max-height: 500px"
+                        class="tables-croll">
+                        <!-- Lịch ở đây -->
+                        <table style="text-align:center;" class="table table-striped table-bordered table-hover"
+                            width="100%" role="grid">
+                            <thead>
+                                <tr style="width:100%;">
+                                    <th style="min-width: 120px; text-align:center;">Lớp học phần</th>
+                                    <th style="min-width: 150px; max-width: 200px;  text-align:center;">Tên học phần
+                                    </th>
+                                    <th style="min-width: 150px;  text-align:center;">Tên giảng viên</th>
+                                    <th style="min-width: 120px; text-align:center;">Tuần 1</th>
+                                    <th style="min-width: 120px; text-align:center;">Tuần 2</th>
+                                    <th style="min-width: 120px; text-align:center;">Tuần 3</th>
+                                    <th style="min-width: 120px; text-align:center;">Tuần 4</th>
+                                    <th style="min-width: 120px; text-align:center;">Tuần 5</th>
+                                    <th style="min-width: 120px; text-align:center;">Tuần 6</th>
+                                    <th style="min-width: 120px; text-align:center;">Tuần 7</th>
+                                    <th style="min-width: 120px; text-align:center;">Tuần 8</th>
+                                    <th style="min-width: 120px; text-align:center;">Tuần 9</th>
+                                    <th style="min-width: 120px; text-align:center;">Tuần 10</th>
+                                    <th style="min-width: 120px; text-align:center;">Tuần 11</th>
+                                    <th style="min-width: 120px; text-align:center;">Tuần 12</th>
+                                    <th style="min-width: 120px; text-align:center;">Tuần 13</th>
+                                    <th style="min-width: 120px; text-align:center;">Tuần 14</th>
+                                    <th style="min-width: 120px; text-align:center;">Tuần 15</th>
+                                    <th style="min-width: 120px; text-align:center;">Tuần 16</th>
+                                    <th style="min-width: 120px; text-align:center;">Tuần 17</th>
+                                    <th style="min-width: 120px; text-align:center;">Tuần 18</th>
+                                    <th style="min-width: 120px; text-align:center;">Tuần 19</th>
+                                    <th style="min-width: 120px; text-align:center;">Tuần 20</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($subjects as $subject)
+                                    <tr>
+                                        <td style="vertical-align: middle;"
+                                            title="Năm học: {{ $subject->namhoc_id }}, Học kỳ: {{ $subject->hocky_id }}, Loại: {{ $subject->loai }}">
+                                            {{ $subject->mahp_id }}</td>
+                                        <td style="vertical-align: middle;">{{ $subject->tenmh }}</td>
+                                        <td style="vertical-align: middle;">{{ $subject->tengv }}</td>
+                                        <td title="<?php getDateSchedule($dates, $subject->mahp_id, '1'); ?>">
+                                            <img style="display: inline-block; width:24px; height:100%; vertical-align: middle;"
+                                                src="{{ $subject->tuan1 == 'true' ? '/icons/check.png' : ($subject->tuan1 == 'false' ? '/icons/nocheck.png' : '/icons/null.png') }}"
+                                                alt="">
+                                        </td>
+                                        <td title="<?php getDateSchedule($dates, $subject->mahp_id, '2'); ?>"> <img
+                                                style="display: inline-block; width:24px; height:100%; vertical-align: middle;"
+                                                src="{{ $subject->tuan2 == 'true' ? '/icons/check.png' : ($subject->tuan2 == 'false' ? '/icons/nocheck.png' : '/icons/null.png') }}"
+                                                alt=""></td>
+                                        <td title="<?php getDateSchedule($dates, $subject->mahp_id, '3'); ?>"> <img
+                                                style="display: inline-block; width:24px; height:100%; vertical-align: middle;"
+                                                src="{{ $subject->tuan3 == 'true' ? '/icons/check.png' : ($subject->tuan3 == 'false' ? '/icons/nocheck.png' : '/icons/null.png') }}"
+                                                alt=""></td>
+                                        <td title="<?php getDateSchedule($dates, $subject->mahp_id, '4'); ?>"> <img
+                                                style="display: inline-block; width:24px; height:100%; vertical-align: middle;"
+                                                src="{{ $subject->tuan4 == 'true' ? '/icons/check.png' : ($subject->tuan4 == 'false' ? '/icons/nocheck.png' : '/icons/null.png') }}"
+                                                alt=""></td>
+                                        <td title="<?php getDateSchedule($dates, $subject->mahp_id, '5'); ?>"> <img
+                                                style="display: inline-block; width:24px; height:100%; vertical-align: middle;"
+                                                src="{{ $subject->tuan5 == 'true' ? '/icons/check.png' : ($subject->tuan5 == 'false' ? '/icons/nocheck.png' : '/icons/null.png') }}"
+                                                alt=""></td>
+                                        <td title="<?php getDateSchedule($dates, $subject->mahp_id, '6'); ?>"> <img
+                                                style="display: inline-block; width:24px; height:100%; vertical-align: middle;"
+                                                src="{{ $subject->tuan6 == 'true' ? '/icons/check.png' : ($subject->tuan6 == 'false' ? '/icons/nocheck.png' : '/icons/null.png') }}"
+                                                alt=""></td>
+                                        <td title="<?php getDateSchedule($dates, $subject->mahp_id, '7'); ?>"> <img
+                                                style="display: inline-block; width:24px; height:100%; vertical-align: middle;"
+                                                src="{{ $subject->tuan7 == 'true' ? '/icons/check.png' : ($subject->tuan7 == 'false' ? '/icons/nocheck.png' : '/icons/null.png') }}"
+                                                alt=""></td>
+                                        <td title="<?php getDateSchedule($dates, $subject->mahp_id, '8'); ?>"> <img
+                                                style="display: inline-block; width:24px; height:100%; vertical-align: middle;"
+                                                src="{{ $subject->tuan8 == 'true' ? '/icons/check.png' : ($subject->tuan8 == 'false' ? '/icons/nocheck.png' : '/icons/null.png') }}"
+                                                alt=""></td>
+                                        <td title="<?php getDateSchedule($dates, $subject->mahp_id, '9'); ?>"> <img
+                                                style="display: inline-block; width:24px; height:100%; vertical-align: middle;"
+                                                src="{{ $subject->tuan9 == 'true' ? '/icons/check.png' : ($subject->tuan9 == 'false' ? '/icons/nocheck.png' : '/icons/null.png') }}"
+                                                alt=""></td>
+                                        <td title="<?php getDateSchedule($dates, $subject->mahp_id, '10'); ?>"> <img
+                                                style="display: inline-block; width:24px; height:100%; vertical-align: middle;"
+                                                src="{{ $subject->tuan10 == 'true' ? '/icons/check.png' : ($subject->tuan10 == 'false' ? '/icons/nocheck.png' : '/icons/null.png') }}"
+                                                alt=""></td>
+                                        <td title="<?php getDateSchedule($dates, $subject->mahp_id, '11'); ?>"> <img
+                                                style="display: inline-block; width:24px; height:100%; vertical-align: middle;"
+                                                src="{{ $subject->tuan11 == 'true' ? '/icons/check.png' : ($subject->tuan11 == 'false' ? '/icons/nocheck.png' : '/icons/null.png') }}"
+                                                alt=""></td>
+                                        <td title="<?php getDateSchedule($dates, $subject->mahp_id, '12'); ?>"> <img
+                                                style="display: inline-block; width:24px; height:100%; vertical-align: middle;"
+                                                src="{{ $subject->tuan12 == 'true' ? '/icons/check.png' : ($subject->tuan12 == 'false' ? '/icons/nocheck.png' : '/icons/null.png') }}"
+                                                alt=""></td>
+                                        <td title="<?php getDateSchedule($dates, $subject->mahp_id, '13'); ?>"> <img
+                                                style="display: inline-block; width:24px; height:100%; vertical-align: middle;"
+                                                src="{{ $subject->tuan13 == 'true' ? '/icons/check.png' : ($subject->tuan13 == 'false' ? '/icons/nocheck.png' : '/icons/null.png') }}"
+                                                alt=""></td>
+                                        <td title="<?php getDateSchedule($dates, $subject->mahp_id, '14'); ?>"> <img
+                                                style="display: inline-block; width:24px; height:100%; vertical-align: middle;"
+                                                src="{{ $subject->tuan14 == 'true' ? '/icons/check.png' : ($subject->tuan14 == 'false' ? '/icons/nocheck.png' : '/icons/null.png') }}"
+                                                alt=""></td>
+                                        <td title="<?php getDateSchedule($dates, $subject->mahp_id, '15'); ?>"> <img
+                                                style="display: inline-block; width:24px; height:100%; vertical-align: middle;"
+                                                src="{{ $subject->tuan15 == 'true' ? '/icons/check.png' : ($subject->tuan15 == 'false' ? '/icons/nocheck.png' : '/icons/null.png') }}"
+                                                alt=""></td>
+                                        <td title="<?php getDateSchedule($dates, $subject->mahp_id, '16'); ?>"> <img
+                                                style="display: inline-block; width:24px; height:100%; vertical-align: middle;"
+                                                src="{{ $subject->tuan16 == 'true' ? '/icons/check.png' : ($subject->tuan16 == 'false' ? '/icons/nocheck.png' : '/icons/null.png') }}"
+                                                alt=""></td>
+                                        <td title="<?php getDateSchedule($dates, $subject->mahp_id, '17'); ?>"> <img
+                                                style="display: inline-block; width:24px; height:100%; vertical-align: middle;"
+                                                src="{{ $subject->tuan17 == 'true' ? '/icons/check.png' : ($subject->tuan17 == 'false' ? '/icons/nocheck.png' : '/icons/null.png') }}"
+                                                alt=""></td>
+                                        <td title="<?php getDateSchedule($dates, $subject->mahp_id, '18'); ?>"> <img
+                                                style="display: inline-block; width:24px; height:100%; vertical-align: middle;"
+                                                src="{{ $subject->tuan18 == 'true' ? '/icons/check.png' : ($subject->tuan18 == 'false' ? '/icons/nocheck.png' : '/icons/null.png') }}"
+                                                alt=""></td>
+                                        <td title="<?php getDateSchedule($dates, $subject->mahp_id, '19'); ?>"> <img
+                                                style="display: inline-block; width:24px; height:100%; vertical-align: middle;"
+                                                src="{{ $subject->tuan19 == 'true' ? '/icons/check.png' : ($subject->tuan19 == 'false' ? '/icons/nocheck.png' : '/icons/null.png') }}"
+                                                alt=""></td>
+                                        <td title="<?php getDateSchedule($dates, $subject->mahp_id, '20'); ?>"> <img
+                                                style="display: inline-block; width:24px; height:100%; vertical-align: middle;"
+                                                src="{{ $subject->tuan20 == 'true' ? '/icons/check.png' : ($subject->tuan20 == 'false' ? '/icons/nocheck.png' : '/icons/null.png') }}"
+                                                alt=""></td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                        <!-- End lịch ở đây -->
                     </div>
                     <!-- End list column methods -->
 
 
-                    <!-- Column methods -->
-                    <div class="row chart-custom">
-                        <div class="col-md-5">
-                            <div class="box-df">
-                                <div class="portlet">
-                                    <div class="portlet-title">
-                                        <div class="caption">
-                                            <span
-                                                class="caption-subject
-                                                    bold"><a
-                                                    href="#" lang="db-kqht">Kết quả
-                                                    học tập</a></span>
-                                        </div>
-                                        <div class="actions">
-                                            <select class="form-control" id="cboIDDotThongKeKQHT"
-                                                langid="db-hocky-combobox" name="cboIDDotThongKeKQHT"
-                                                placeholder="Chọn học kỳ">
-                                                <option value="">Chọn học kỳ</option>
-                                                <option selected="selected" value="34">HK1 (2021 -
-                                                    2022)</option>
-                                                <option value="33">HK2 (2020
-                                                    - 2021)</option>
-                                                <option value="32">HK1 (2020
-                                                    - 2021)</option>
-                                                <option value="30">HK2 (2019
-                                                    - 2020)</option>
-                                                <option value="27">HK1 (2019
-                                                    - 2020)</option>
-                                                <option value="29">HK3 (2018
-                                                    - 2019)</option>
-                                                <option value="26">HK2 (2018
-                                                    - 2019)</option>
-                                                <option value="24">HK1 (2018
-                                                    - 2019)</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="portlet-body">
-                                        <div id="box-dashboard-thongke-ketquahoctap-theodot">
-                                            <div class="text-center">
-                                                <img src="/template/teacher/Assets/images/tkkqht.png">
-                                            </div>
-                                        </div>
-
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="box-df">
-                                <div class="portlet">
-                                    <div class="portlet-title">
-                                        <div class="caption">
-                                            <span
-                                                class="caption-subject
-                                                    bold"
-                                                lang="db-tiendohoctap">Tiến
-                                                độ học tập</span>
-                                        </div>
-                                    </div>
-                                    <div class="portlet-body">
-
-
-                                        <style>
-                                            text[text-anchor="end"] {
-                                                display: none !important;
-                                            }
-
-                                            .highcharts-button {
-                                                display: none !important;
-                                            }
-
-                                            path {
-                                                font-family: Arial;
-                                            }
-
-                                        </style>
-                                        <div>
-                                            <div id="chartThongTinTinChiDaHoc">
-                                            </div>
-                                            <p style="color:
-                                                    #003f65;font-size:
-                                                    14px;font-weight:
-                                                    bold;text-align: center;">
-                                                121/125</p>
-                                        </div>
-                                        <script>
-                                            Highcharts.chart('chartThongTinTinChiDaHoc', {
-
-                                                chart: {
-                                                    type: 'solidgauge',
-                                                    height: '270px',
-                                                    events: {
-                                                        //render: renderIcons
-                                                    }
-                                                },
-                                                title: {
-                                                    text: ''
-                                                },
-                                                tooltip: {
-                                                    useHTML: true,
-                                                    borderWidth: 0,
-                                                    backgroundColor: 'none',
-                                                    shadow: false,
-                                                    style: {
-                                                        fontSize: '16px'
-                                                    },
-                                                    //pointFormat: '{series.name}',
-                                                    pointFormat: '<p style="text-align:center !important; font-family: arial;">{series.name}<br><p style="text-align:center;display:block;font-size:2em; color: {point.color}; font-weight: bold">{point.y}%</p><p>',
-                                                    positioner: function(labelWidth) {
-                                                        return {
-                                                            x: ((this.chart.chartWidth - labelWidth) / 2),
-                                                            y: (this.chart.plotHeight / 2) - 35
-                                                        };
-                                                    }
-                                                },
-
-                                                pane: {
-                                                    startAngle: 0,
-                                                    endAngle: 360,
-                                                    background: [{
-                                                        outerRadius: '112%',
-                                                        innerRadius: '88%',
-                                                        backgroundColor: Highcharts.Color(Highcharts.getOptions().colors[0])
-                                                            .setOpacity(0.3)
-                                                            .get(),
-                                                        borderWidth: 0
-                                                    }, {
-                                                        outerRadius: '87%',
-                                                        innerRadius: '63%',
-                                                        backgroundColor: Highcharts.Color(Highcharts.getOptions().colors[2])
-                                                            .setOpacity(0.3)
-                                                            .get(),
-                                                        borderWidth: 0
-                                                    }]
-                                                },
-
-                                                yAxis: {
-                                                    min: 0,
-                                                    max: 100,
-                                                    lineWidth: 0,
-                                                    tickPositions: []
-                                                },
-
-                                                plotOptions: {
-                                                    solidgauge: {
-                                                        dataLabels: {
-                                                            enabled: false
-                                                        },
-                                                        linecap: 'round',
-                                                        stickyTracking: false,
-                                                        rounded: true
-                                                    }
-                                                },
-
-                                                series: [{
-                                                    name: 'Tổng: 125 tín chỉ',
-                                                    data: [{
-                                                        color: Highcharts.getOptions().colors[0],
-                                                        radius: '112%',
-                                                        innerRadius: '88%',
-                                                        y: 100
-                                                    }]
-                                                }, {
-                                                    name: 'Đ&#227; học: 121 tín chỉ',
-                                                    data: [{
-                                                        color: Highcharts.getOptions().colors[2],
-                                                        radius: '87%',
-                                                        innerRadius: '63%',
-                                                        y: 96
-                                                    }]
-                                                }]
-                                            });
-                                        </script>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="box-df">
-                                <div class="portlet">
-                                    <div class="portlet-title">
-                                        <div class="caption">
-                                            <span
-                                                class="caption-subject
-                                                    bold"
-                                                lang="db-lhp">Lớp học
-                                                phần</span>
-                                        </div>
-                                        <div class="actions">
-                                            <select class="form-control" id="cboIDDotForLHP"
-                                                langid="db-hocky-combobox_1" name="cboIDDotForLHP"
-                                                placeholder="Chọn học kỳ">
-                                                <option value="">Chọn học kỳ</option>
-                                                <option selected="selected" value="34">HK1 (2021 -
-                                                    2022)</option>
-                                                <option value="33">HK2 (2020
-                                                    - 2021)</option>
-                                                <option value="32">HK1 (2020
-                                                    - 2021)</option>
-                                                <option value="30">HK2 (2019
-                                                    - 2020)</option>
-                                                <option value="27">HK1 (2019
-                                                    - 2020)</option>
-                                                <option value="29">HK3 (2018
-                                                    - 2019)</option>
-                                                <option value="26">HK2 (2018
-                                                    - 2019)</option>
-                                                <option value="24">HK1 (2018
-                                                    - 2019)</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="portlet-body">
-                                        <div id="box-dashboard-lophocphan-theodot">
-                                            <div class="panel panel-admin">
-                                                <div
-                                                    class="panel-heading
-                                                        clearfix">
-                                                    <span>Môn học/học phần</span>
-                                                    <span class="text-center">Số
-                                                        tín chỉ</span>
-                                                </div>
-                                                <div
-                                                    class="panel-scroll
-                                                        border-scroll">
-                                                    <table
-                                                        class="table
-                                                            table-striped">
-                                                        <tbody>
-                                                            <tr>
-                                                                <td width="80%">
-                                                                    <div><a href="#" class="color-active"
-                                                                            data-bg="122705">010100213806</a></div>
-                                                                    <div class="name">Kho&#225;
-                                                                        luận
-                                                                        tốt
-                                                                        nghiệp</div>
-                                                                </td>
-                                                                <td width="20%">
-                                                                    <div class="text-center">8</div>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td width="80%">
-                                                                    <div><a href="#" class="color-active"
-                                                                            data-bg="122706">010100706606</a></div>
-                                                                    <div class="name">Thực
-                                                                        tập
-                                                                        nghề
-                                                                        nghiệp</div>
-                                                                </td>
-                                                                <td width="20%">
-                                                                    <div class="text-center">4</div>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td width="80%">
-                                                                    <div><a href="#" class="color-active"
-                                                                            data-bg="137292">000010001113</a></div>
-                                                                    <div class="name">Phổ
-                                                                        biến
-                                                                        về
-                                                                        kỳ
-                                                                        thi
-                                                                        đ&#225;nh
-                                                                        gi&#225;
-                                                                        năng
-                                                                        lực
-                                                                        ngoại
-                                                                        ngữ
-                                                                        -
-                                                                        chuẩn
-                                                                        đầu
-                                                                        ra
-                                                                        (P.Đ&#224;o
-                                                                        tạo
-                                                                        chủ
-                                                                        tr&#236;)</div>
-                                                                </td>
-                                                                <td width="20%">
-                                                                    <div class="text-center">0</div>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td width="80%">
-                                                                    <div><a href="#" class="color-active"
-                                                                            data-bg="137386">0A00000702</a></div>
-                                                                    <div class="name">Sinh
-                                                                        hoạt
-                                                                        cuối
-                                                                        kh&#243;a
-                                                                        gặp
-                                                                        khoa
-                                                                        chuy&#234;n
-                                                                        ng&#224;nh</div>
-                                                                </td>
-                                                                <td width="20%">
-                                                                    <div class="text-center">0</div>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td width="80%">
-                                                                    <div><a href="#" class="color-active"
-                                                                            data-bg="137415">010109729813</a></div>
-                                                                    <div class="name">Sinh
-                                                                        hoạt
-                                                                        cuối
-                                                                        kh&#243;a</div>
-                                                                </td>
-                                                                <td width="20%">
-                                                                    <div class="text-center">0</div>
-                                                                </td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                            <script>
-                                                jQuery(document).ready(function($) {
-                                                    if ($('.border-scroll').length > 0) {
-                                                        $('.border-scroll').niceScroll({
-                                                            cursorborder: 'none',
-                                                            cursorcolor: '#999',
-                                                            autohidemode: 'leave'
-                                                        });
-                                                    }
-                                                });
-                                            </script>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- End column methods -->
                 </div>
             </div>
         </div>
@@ -921,25 +586,6 @@
             }
 
         </style>
-
-        <!-- Footer -->
-        <div class="container" style="text-align:right;">
-            <ul id="footer">
-                <li>
-                    <span><i class="fa fa-bar-chart"></i></span>Đang online:
-                    1
-                </li>
-                <li>
-                    <span><i class="fa fa-user" aria-hidden="true"></i></span>Hôm
-                    qua: 0
-                </li>
-                <li>
-                    <span><i class="fa fa-users" aria-hidden="true"></i></span>Tổng
-                    truy cập: 5,908,291
-                </li>
-            </ul>
-        </div>
-        <!-- End footer -->
 
         <div><input id="ASC-MC" name="ASC-MC" type="hidden" value="WIN-04LJNRVBU7A" /></div>
 

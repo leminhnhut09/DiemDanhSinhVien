@@ -16,6 +16,7 @@ class CreatePhonghocsTable extends Migration
         Schema::create('phonghocs', function (Blueprint $table) {
             $table->string('maphong', 10)->primary();
             $table->string('tenphong', 255);
+            $table->string('succhua', 255);
             $table->timestamps();
         });
     }

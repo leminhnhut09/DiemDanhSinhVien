@@ -13,11 +13,10 @@ class TeacherService
     public function layThongTin($request)
     {
         $user = $request->input('user');
-        $infoPerson = DB::table('sinhviens')
-            ->join('lops', 'lops.malop', 'sinhviens.malop_id')
-            ->join('khoas', 'khoas.makhoa', 'lops.makhoa_id')
-            ->where('sinhviens.masv', $user)
-            ->select('masv', 'tensv', 'gioitinh', 'ngaysinh', 'diachi', 'malop', 'tenkhoa', 'anh')
+        $infoPerson = DB::table('giangviens')
+            ->join('khoas', 'giangviens.makhoa_id', 'khoas.makhoa')
+            ->where('giangviens.magv', $user)
+            ->select('magv', 'tengv', 'gioitinh', 'ngaysinh', 'diachi', 'khoas.makhoa', 'tenkhoa', 'anh')
             ->get();
         return $infoPerson;
     }
@@ -29,17 +28,17 @@ class TeacherService
         $lastWeek = date("Y-m-d", strtotime('sunday this week'));
 
 
-        $listHP = DB::table('giangvien_monhoc_sinhvien')
-            ->where('masv_id', $user)
-            ->select('mahp_id')
+        $listHP =  DB::table('giangvien_monhoc')
+            ->where('magv_id', $user)
+            ->select('mahp')
             ->get();
 
         $list = [];
         foreach ($listHP as $hp) {
-            array_push($list, $hp->mahp_id);
+            array_push($list, $hp->mahp);
         }
 
-        $lichHoc = DB::table('giangvien_monhoc')
+        $lichDay = DB::table('giangvien_monhoc')
             ->join('cahoc_giangvien_monhoc', 'giangvien_monhoc.mahp', 'cahoc_giangvien_monhoc.mahp_id')
             ->join('cahocs', 'cahoc_giangvien_monhoc.macahoc_id', 'cahocs.macahoc')
             ->whereIn('giangvien_monhoc.mahp', $list)
@@ -48,7 +47,7 @@ class TeacherService
             ->select('giangvien_monhoc.*', 'cahoc_giangvien_monhoc.*', 'cahocs.*')
             ->get();
 
-        return $lichHoc;
+        return $lichDay;
     }
 
     public function update($request)

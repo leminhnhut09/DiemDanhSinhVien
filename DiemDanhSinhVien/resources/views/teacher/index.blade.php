@@ -75,7 +75,7 @@
                             <img class="user-account-img" src="/images/{{ $data[0]->anh }}" style="width:
                             30px;height: 30px;border-radius: 50%
                             !important;object-fit: cover;" />
-                            <a class="user-account-name" href="#" title="">{{ $data[0]->tensv }}</a>
+                            <a class="user-account-name" href="#" title="">{{ $data[0]->tengv }}</a>
                             <i class="fa fa-caret-down
                                     user-account-name-caret-down"
                                 aria-hidden="true"></i>
@@ -202,54 +202,48 @@
                                                     <div class="form-body">
                                                         <div class="form-group">
                                                             <label class="col-xs-6"><span
-                                                                    lang="sv-mssv">MSSV</span>:
+                                                                    lang="sv-mssv">MSGV</span>:
                                                                 <span
-                                                                    class="bold">{{ $data[0]->masv }}</span></label>
-                                                            <label class="col-xs-6"><span lang="sv-lophoc">Lớp
-                                                                    học</span>:
+                                                                    class="bold">{{ $data[0]->magv }}</span></label>
+                                                            <label class="col-xs-6"><span lang="sv-lophoc">Mã
+                                                                    Khoa</span>:
                                                                 <span
-                                                                    class="bold">{{ $data[0]->malop }}</span></label>
+                                                                    class="bold">{{ $data[0]->makhoa }}</span></label>
                                                         </div>
                                                         <div class="form-group" style="">
                                                             <label class="col-xs-6"><span lang="sv-hoten">Họ
                                                                     tên</span>:
                                                                 <span class="bold">
-                                                                    {{ $data[0]->tensv }}</span></label>
-                                                            <label class="col-xs-6"><span lang="sv-khoahoc">Khóa
-                                                                    học</span>:
-                                                                <span class="bold">2018</span></label>
+                                                                    {{ $data[0]->tengv }}</span></label>
+                                                            <label class="col-xs-6"><span lang="sv-nganh">Tên
+                                                                    Khoa</span>:
+                                                                <span
+                                                                    class="bold">{{ $data[0]->tenkhoa }}</span></label>
                                                         </div>
                                                         <div class="form-group" style="">
                                                             <label class="col-xs-6"><span lang="sv-gioitinh">Giới
                                                                     tính</span>:
                                                                 <span
                                                                     class="bold">{{ $data[0]->gioitinh == 0 ? 'Nam' : 'Nữ' }}</span></label>
-                                                            <label class="col-xs-6"><span lang="sv-hedaotao">Bậc
-                                                                    đào tạo</span>:
-                                                                <span class="bold">Đại
-                                                                    học</span></label>
                                                         </div>
                                                         <div class="form-group" style="">
                                                             <label class="col-xs-6"><span lang="sv-ngaysinh">Ngày
                                                                     sinh</span>:
                                                                 <span
                                                                     class="bold">{{ $data[0]->ngaysinh }}</span></label>
-                                                            <label class="col-xs-6"><span
+                                                            {{-- <label class="col-xs-6"><span
                                                                     lang="sv-loaihinhdt">Loại
                                                                     hình đào
                                                                     tạo</span>:
                                                                 <span class="bold">Ch&#237;nh
-                                                                    quy</span></label>
+                                                                    quy</span></label> --}}
                                                         </div>
                                                         <div class="form-group" style="">
                                                             <label class="col-xs-6"><span lang="sv-noisinh">Nơi
                                                                     sinh</span>:
                                                                 <span
                                                                     class="bold">{{ $data[0]->diachi }}</span></label>
-                                                            <label class="col-xs-6"><span
-                                                                    lang="sv-nganh">Ngành</span>:
-                                                                <span
-                                                                    class="bold">{{ $data[0]->tenkhoa }}</span></label>
+
                                                         </div>
                                                     </div>
                                                 </form>
@@ -291,7 +285,7 @@
                                             </div>
                                         </div>
                                         <div class="col-xs-6">
-                                            <a href="{{ route('teacher.store', ['user' => $data[0]->masv]) }}"
+                                            <a href="{{ route('teacher.store', ['user' => $data[0]->magv]) }}"
                                                 class="color-active" title="">
                                                 <div
                                                     class="item-box-menu

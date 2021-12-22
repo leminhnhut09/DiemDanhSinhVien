@@ -17,12 +17,11 @@ class CreateGiangvienMonhocTable extends Migration
             $table->integer('mahp')->primary();
             $table->string('magv_id', 10);
             $table->string('mamh_id', 10);
-            $table->integer('namhoc');
-            $table->tinyInteger('hocky');
-            $table->date('thoigianbd');
-            $table->date('thoigiankt');
+            $table->integer('namhoc_id');
+            $table->tinyInteger('hocky_id');
             $table->foreign('magv_id')->references('magv')->on('giangviens');
             $table->foreign('mamh_id')->references('mamh')->on('monhocs');
+            $table->foreign(['namhoc_id', 'hocky_id'])->references(['namhoc', 'hocky'])->on('hockys');
             $table->timestamps();
         });
     }

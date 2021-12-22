@@ -19,39 +19,31 @@ class StudentController extends Controller
 
     public function index(Request $request)
     {
-        $user = $this->teacherService->layThongTin($request);
+        $user = $this->studentService->layThongTin($request);
+        $listSubject = $this->studentService->GetListSubject($request);
+        $lichHoc = $this->studentService->layLichHoc($request);
+        $dates = $this->studentService->GetDateSchedule();
         // dd($user);
         return view('student.index', [
             'title' => 'Thông tin sinh viên',
-            'data' => $user
+            'data' => $user,
+            'subjects' => $listSubject,
+            'dates' => $dates,
+            'numSubject' => $lichHoc->count()
         ]);
     }
-
-    // public function index(Request $request)
-    // {
-    //     $lichHoc = $this->studentService->layLichHoc($request);
-
-    //     $date = date('Y-m-d');
-
-    //     return view('student.index', [
-    //         'title' => 'Thông tin sinh viên',
-    //         'data' => $lichHoc,
-    //         'ngay' => $date,
-    //         'user' => $request->input('user')
-    //     ]);
-    // }
 
     // hien thi lich
     public function store(Request $request)
     {
         //dd($request->input());
         // kiem tra la giang vien hay sinh vien
-        $user = $this->teacherService->layThongTin($request);
-        $lichDay = $this->teacherService->layLichDay($request);
+        $user = $this->studentService->layThongTin($request);
+        $lichHoc = $this->studentService->layLichHoc($request);
         $date = date('Y-m-d');
         return view('student.schedule', [
             'title' => 'Thông tin sinh viên',
-            'data' => $lichDay,
+            'data' => $lichHoc,
             'ngay' => $date,
             'user' => $user
         ]);

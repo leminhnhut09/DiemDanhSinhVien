@@ -74,7 +74,7 @@
                             <img class="user-account-img" src="/images/{{ $user[0]->anh }}" style="width:
                                 30px;height: 30px;border-radius: 50%
                                 !important;object-fit: cover;" />
-                            <a class="user-account-name" href="#" title="">{{ $user[0]->tensv }}</a>
+                            <a class="user-account-name" href="#" title="">{{ $user[0]->tengv }}</a>
                             <i class="fa fa-caret-down
                                         user-account-name-caret-down"
                                 aria-hidden="true"></i>

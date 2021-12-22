@@ -15,14 +15,8 @@ class HomeController extends Controller
     }
     public function index(Request $request)
     {
-        $lichHoc = $this->mainService->layLichHoc($request);
-
-        $date = date('Y-m-d');
-
         return view('admin.main', [
-            'title' => 'Quản Lý',
-            'data' => $lichHoc,
-            'ngay' => $date
+            'title' => 'Trang quản trị admin',
         ]);
     }
 }

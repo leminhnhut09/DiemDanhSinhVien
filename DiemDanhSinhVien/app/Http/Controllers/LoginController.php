@@ -18,6 +18,11 @@ class LoginController extends Controller
     {
         return view('login', ['title' => 'Đăng Nhập']);
     }
+    public function flush(Request $request)
+    {
+        $r = $request->session()->flush();
+        return redirect("login");
+    }
     public function store(Request $request)
     {
         // Kiểm tra dữ liệu lấy từ form login
@@ -40,7 +45,7 @@ class LoginController extends Controller
                     ]
                 );
             else if ($quyen[0]->name == 2) {
-                return redirect()->route('admin.home');
+                return redirect()->route('facultys.list');
             } else
                 return redirect()->route('student.index', ['user' => $request->input('username')]);
         }

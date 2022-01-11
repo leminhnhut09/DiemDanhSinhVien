@@ -9,26 +9,26 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="name">Mã Khoa</label>
-                        <input type="text" name="makhoa" class="form-control" id="makhoa-edit"
+                        <input readonly type="text" name="makhoa" class="form-control" id="makhoa-edit"
                             placeholder="Nhập tên danh mục">
                     </div>
 
                     <div class="form-group">
                         <label for="description">Tên Khoa</label>
-                        <textarea class="form-control" name="tenkhoa" id="tenkhoa-edit" cols="10"
+                        <textarea required class="form-control" name="tenkhoa" id="tenkhoa-edit" cols="10"
                             rows="10"></textarea>
                     </div>
 
                     <div class="form-group">
                         <label for="content">Ngày thành lập</label>
 
-                        <input type="date" class="form-control" name="ngaythanhlap" id="ngaythanhlap-edit" cols="30"
-                            rows="10" />
+                        <input required type="date" class="form-control" name="ngaythanhlap" id="ngaythanhlap-edit"
+                            cols="30" rows="10" />
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Edit</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                    <button type="submit" class="btn btn-primary">Cập nhật</button>
                 </div>
             </form>
         </div>

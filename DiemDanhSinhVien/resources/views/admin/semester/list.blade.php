@@ -1,7 +1,8 @@
 @extends('admin.main2')
 @section('content')
     <div class="container">
-        <a href="#" class="btn btn-success btn-add" data-target="#modal-add" data-toggle="modal">Add</a>
+        <a href="#" class="btn btn-success btn-add" style="margin:8px;" data-target="#modal-add" data-toggle="modal">Thêm học
+            kỳ</a>
         <div class="table-responsive">
             <table class="table table-hover">
                 <thead>
@@ -26,11 +27,11 @@
                             <td>
                                 <button data-url="/admin/semester/edit/{{ $semester->namhoc }}/{{ $semester->hocky }}"
                                     ​ type="button" data-target="#edit" data-toggle="modal"
-                                    class="btn btn-warning btn-edit">Edit</button>
+                                    class="btn btn-warning btn-edit">Sửa</button>
                                 <button
                                     data-url="/admin/semester/destroy/{{ $semester->namhoc }}/{{ $semester->hocky }}"
                                     ​ type="button" data-target="#delete" data-toggle="modal"
-                                    class="btn btn-danger btn-delete">Delete</button>
+                                    class="btn btn-danger btn-delete">Xóa</button>
                             </td>
                         </tr>
                     @endforeach
@@ -52,31 +53,32 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="name">Năm học</label>
-                            <input type="text" name="namhoc" class="form-control" id="namhoc-add"
+                            <input required type="text" name="namhoc" class="form-control" id="namhoc-add"
                                 placeholder="Nhập năm học">
                         </div>
 
                         <div class="form-group">
                             <label for="description">Học kỳ</label>
-                            <input type="text" name="hocky" class="form-control" id="hocky-add" placeholder="Nhập học kỳ">
+                            <input required type="text" name="hocky" class="form-control" id="hocky-add"
+                                placeholder="Nhập học kỳ">
                         </div>
 
 
                         <div class="form-group">
                             <label for="">Ngày bắt đầu</label>
-                            <input name="ngaybd" type="date" name="" id="ngaybd-add" class="form-control" value=""
-                                required="required" title="">
+                            <input required name="ngaybd" type="date" name="" id="ngaybd-add" class="form-control"
+                                value="" required="required" title="">
                         </div>
                         <div class="form-group">
                             <label for="">Ngày kết thúc</label>
-                            <input name="ngaykt" type="date" name="" id="ngaykt-add" class="form-control" value=""
-                                required="required" title="">
+                            <input required name="ngaykt" type="date" name="" id="ngaykt-add" class="form-control"
+                                value="" required="required" title="">
                         </div>
                         @csrf
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Add</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-primary">Thêm</button>
                     </div>
                 </form>
             </div>
@@ -95,32 +97,32 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="name">Năm học</label>
-                            <input type="text" name="namhoc" class="form-control" id="namhoc-edit"
+                            <input readonly type="text" name="namhoc" class="form-control" id="namhoc-edit"
                                 placeholder="Nhập năm học">
                         </div>
 
                         <div class="form-group">
                             <label for="description">Học kỳ</label>
-                            <input type="text" name="hocky" class="form-control" id="hocky-edit"
+                            <input readonly type="text" name="hocky" class="form-control" id="hocky-edit"
                                 placeholder="Nhập học kỳ">
                         </div>
 
 
                         <div class="form-group">
                             <label for="">Ngày bắt đầu</label>
-                            <input name="ngaybd" type="date" name="" id="ngaybd-edit" class="form-control" value=""
+                            <input required name="ngaybd" type="date" id="ngaybd-edit" class="form-control" value=""
                                 required="required" title="">
                         </div>
                         <div class="form-group">
                             <label for="">Ngày kết thúc</label>
-                            <input name="ngaykt" type="date" name="" id="ngaykt-edit" class="form-control" value=""
+                            <input required name="ngaykt" type="date" id="ngaykt-edit" class="form-control" value=""
                                 required="required" title="">
                         </div>
                         @csrf
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Edit</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-primary">Sửa</button>
                     </div>
                 </form>
             </div>
@@ -174,11 +176,11 @@
                             response.data.thoigiankt + '</td>' +
                             '<td><button data-url="/admin/semester/edit/' + response.data
                             .namhoc + '/' + response.data.hocky + '" type="button" ' +
-                            'data-target="#edit" data-toggle="modal" class="btn btn-warning btn-edit">Edit</button>' +
+                            'data-target="#edit" data-toggle="modal" class="btn btn-warning btn-edit">Sửa</button>' +
                             '<button data-url="/admin/semester/destroy/' + response.data
                             .namhoc + '/' + response.data.hocky +
                             '"​ type="button" style="margin-left: 5px;" data-target="#delete" ' +
-                            ' data-toggle="modal"class="btn btn-danger btn-delete">Delete</button></td>'
+                            ' data-toggle="modal"class="btn btn-danger btn-delete">Xóa</button></td>'
                         );
                     },
                     error: function(jqXHR, textStatus, errorThrown) {

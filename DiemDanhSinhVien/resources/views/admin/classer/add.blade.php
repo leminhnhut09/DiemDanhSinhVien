@@ -12,13 +12,13 @@
                    <div class="modal-body">
                        <div class="form-group">
                            <label for="name">Mã lớp</label>
-                           <input type="text" name="malop" class="form-control" id="malop-add"
+                           <input required type="text" name="malop" class="form-control" id="malop-add"
                                placeholder="Nhập mã lớp">
                        </div>
 
                        <div class="form-group">
                            <label for="description">Tên lớp</label>
-                           <textarea class="form-control" name="tenlop" id="tenlop-add" cols="10"
+                           <textarea required class="form-control" name="tenlop" id="tenlop-add" cols="10"
                                rows="10"></textarea>
                        </div>
                        <div class="form-group">
@@ -35,8 +35,8 @@
 
                    </div>
                    <div class="modal-footer">
-                       <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                       <button type="submit" class="btn btn-primary">Add</button>
+                       <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                       <button type="submit" class="btn btn-primary">Thêm</button>
                    </div>
                </form>
            </div>

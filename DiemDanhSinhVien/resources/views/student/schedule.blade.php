@@ -59,12 +59,12 @@
                         </a>
                     </div>
 
-                    <div class="search-bar">
+                    {{-- <div class="search-bar">
                         <form action="#">
                             <input type="text" id="k" name="k" placeholder="Tìm kiếm..." required>
                             <button type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
                         </form>
-                    </div>
+                    </div> --}}
 
                     <div class="menu-btn">
                         <a href="#" title=""><i class="fa fa-bars"></i></a>
@@ -72,7 +72,7 @@
 
                     <div class="user-account dropdown">
                         <div class="user-info" data-toggle="dropdown">
-                            <img class="user-account-img" src="/images/{{ $user[0]->anh }}" style="width:
+                            <img class="user-account-img" src="{{ $user[0]->anh }}" style="width:
                                 30px;height: 30px;border-radius: 50%
                                 !important;object-fit: cover;" />
                             <a class="user-account-name" href="#" title="">{{ $user[0]->tensv }}</a>
@@ -82,9 +82,7 @@
                         </div>
                         <div class="user-account-info dropdown-menu pull-right">
                             <ul class="us-links">
-                                <li><a href="#" title="">Thông tin cá nhân</a></li>
-                                <li><a title="" onclick="popupDoiMatKhau()">Đổi mật khẩu</a></li>
-                                <li><a href="#" title="">Đăng xuất</a></li>
+                                <li><a href="/logout" title="">Đăng xuất</a></li>
                             </ul>
                         </div>
                     </div>
@@ -98,14 +96,14 @@
                                 </a>
                             </li>
 
-                            <li>
+                            {{-- <li>
                                 <a id="spanBell" href="#" title="">
                                     <div id="tinTuc" lang="tin-tuc">
                                         <i class="fa fa-bell-o" aria-hidden="true"></i>&nbsp&nbspTin
                                         tức
                                     </div>
                                 </a>
-                            </li>
+                            </li> --}}
                             <!-- Animation notify -->
                             <script>
                                 CheckNews();
@@ -126,194 +124,142 @@
             </div>
         </header>
         <!--End header -->
+        <script>
+            function buildcell(data, buoi, thu) {
+                var len = data.length;
+                var html = '<td style="min-height: 150px;"></td>';
+                for (var i = 0; i < len; i++) {
+                    if (data[i].buoi == buoi && data[i].thu == thu) {
+                        console.log(data[i]);
+                        html =
+                            `<td style="min-height: 150px;">` +
+                            ` <div style="width:100%; flex-direction: column;display: flex; min-height: 150px;justify-content: space-around;border-color:#1da1f2; background-color:#92d6ff;"` +
+                            ` class="content text-left" data-bg="129872" tyle="text-align: left"> <b><a href="javascript:" target="" ` +
+                            `style="text-decoration: none; color: #003763; text-align:center; display:block;">${data[i].mamh_id }</a></b>` +
+                            `<p style="text-align:center;"><span lang="lichtheotuan-tiet">Tiết:</span> ${data[i].tietbd + ` - ` + data[i].tietkt } </p> ` +
+                            `<p lang="giang-duong" style="text-align:center;"> Phòng: ${data[i].maphong_id } </p>` +
+                            `<div style="width:100%; display:flex; justify-content:center;"> <a class="btn btn-danger" style="margin-right:0; border-radius: 5px !important;"` +
+                            `href="#"onclick="viewStudent({{ $user[0]->masv }}, ${data[i].mahp }, ${data[i].tuan })"><i class="fas fa-trash"></i><span` +
+                            ` style="margin-left: 8px">Xem điểm danh</span></a></div></div></td>`
+                    }
+                }
+                return html;
+            }
+
+            function buildTable(user, status) {
+                if (status == 'current') {
+                    $.ajax({
+                        type: 'post',
+                        url: '/student/schedule/update',
+                        data: {
+                            data: $('#curentdate').val(),
+                            status: status,
+                            user: user,
+                        },
+                        success: function(response) {
+                            var table = document.getElementById('content-table');
+                            $("#dateNgayXemLich").val(response.data[1][0]);
+                            table.innerHTML =
+                                '<table style="text-align:center;" class="fl-table table table-bordered text-center no-footer dtr-inline" width="100%" role="grid">' +
+                                '<thead><tr><th style="width:50px"></th><th>Thứ 2 <br />' + response.data[1][0] +
+                                '</th><th>Thứ 3 <br /> ' + response.data[1][1] + '</th>' +
+                                '<th>Thứ 4 <br /> ' + response.data[1][2] + '</th><th>Thứ 5 <br /> ' +
+                                response.data[1][3] + '</th><th>Thứ 6 <br /> ' + response.data[1][4] +
+                                '</th><th>Thứ 7 <br /> ' + response.data[1][5] + '</th><th>Chủ Nhật <br /> ' +
+                                response.data[1][6] + '</th></tr></thead>' +
+                                '<tbody style="background: url(/template/teacher/Assets/images/transparent-pattern-square-4.png)">' +
+                                '<tr><td style="width:50px; font-weight: bold;vertical-align: middle; height: 150px;">Sáng</td>' +
+                                buildcell(response.data[0], 0, 2) + buildcell(response.data[0], 0, 3) + buildcell(
+                                    response
+                                    .data[0], 0, 4) +
+                                buildcell(response.data[0], 0, 5) + buildcell(response.data[0], 0, 6) + buildcell(
+                                    response
+                                    .data[0], 0, 7) +
+                                buildcell(response.data[0], 0, 8) + '</tr>' +
+                                '<tr><td style="width:50px; font-weight: bold;vertical-align: middle; height: 150px;">Chiều</td>' +
+                                buildcell(response.data[0], 1, 2) + buildcell(response.data[0], 1, 3) + buildcell(
+                                    response
+                                    .data[0], 1, 4) +
+                                buildcell(response.data[0], 1, 5) + buildcell(response.data[0], 1, 6) + buildcell(
+                                    response
+                                    .data[0], 1, 7) +
+                                buildcell(response.data[0], 1, 8) + '</tr>' +
+                                '<tr><td style="width:50px; font-weight: bold;vertical-align: middle; height: 150px;">Tối</td>' +
+                                buildcell(response.data[0], 2, 2) + buildcell(response.data[0], 2, 3) + buildcell(
+                                    response
+                                    .data[0], 2, 4) +
+                                buildcell(response.data[0], 2, 5) + buildcell(response.data[0], 2, 6) + buildcell(
+                                    response
+                                    .data[0], 2, 7) +
+                                buildcell(response.data[0], 2, 8) + '</tr>' +
+                                '</tbody></table>';
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            //xử lý lỗi tại đây
+                        }
+                    })
+                } else {
+                    $.ajax({
+                        type: 'post',
+                        url: '/student/schedule/update',
+                        data: {
+                            data: $('#dateNgayXemLich').val(),
+                            status: status,
+                            user: user,
+                        },
+                        success: function(response) {
+                            var table = document.getElementById('content-table');
+                            $("#dateNgayXemLich").val(response.data[1][0]);
+                            table.innerHTML =
+                                '<table style="text-align:center;" class="fl-table table table-bordered text-center no-footer dtr-inline" width="100%" role="grid">' +
+                                '<thead><tr><th style="width:50px"></th><th>Thứ 2 <br />' + response.data[1][0] +
+                                '</th><th>Thứ 3 <br /> ' + response.data[1][1] + '</th>' +
+                                '<th>Thứ 4 <br /> ' + response.data[1][2] + '</th><th>Thứ 5 <br /> ' +
+                                response.data[1][3] + '</th><th>Thứ 6 <br /> ' + response.data[1][4] +
+                                '</th><th>Thứ 7 <br /> ' + response.data[1][5] + '</th><th>Chủ Nhật <br /> ' +
+                                response.data[1][6] + '</th></tr></thead>' +
+                                '<tbody style="background: url(/template/teacher/Assets/images/transparent-pattern-square-4.png)">' +
+                                '<tr><td style="width:50px; font-weight: bold;vertical-align: middle; height: 150px;">Sáng</td>' +
+                                buildcell(response.data[0], 0, 2) + buildcell(response.data[0], 0, 3) + buildcell(
+                                    response
+                                    .data[0], 0, 4) +
+                                buildcell(response.data[0], 0, 5) + buildcell(response.data[0], 0, 6) + buildcell(
+                                    response
+                                    .data[0], 0, 7) +
+                                buildcell(response.data[0], 0, 8) + '</tr>' +
+                                '<tr><td style="width:50px; font-weight: bold;vertical-align: middle; height: 150px;">Chiều</td>' +
+                                buildcell(response.data[0], 1, 2) + buildcell(response.data[0], 1, 3) + buildcell(
+                                    response
+                                    .data[0], 1, 4) +
+                                buildcell(response.data[0], 1, 5) + buildcell(response.data[0], 1, 6) + buildcell(
+                                    response
+                                    .data[0], 1, 7) +
+                                buildcell(response.data[0], 1, 8) + '</tr>' +
+                                '<tr><td style="width:50px; font-weight: bold;vertical-align: middle; height: 150px;">Tối</td>' +
+                                buildcell(response.data[0], 2, 2) + buildcell(response.data[0], 2, 3) + buildcell(
+                                    response
+                                    .data[0], 2, 4) +
+                                buildcell(response.data[0], 2, 5) + buildcell(response.data[0], 2, 6) + buildcell(
+                                    response
+                                    .data[0], 2, 7) +
+                                buildcell(response.data[0], 2, 8) + '</tr>' +
+                                '</tbody></table>';
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            //xử lý lỗi tại đây
+                        }
+                    })
+                }
+            }
+        </script>
 
         <!-- Content -->
         <div class="main-content">
             <div class="container" id="full-resize-table">
                 <div class="main-section-content" id="contnet">
                     <div class="row">
-                        <!-- Menu Left -->
-                        <div class="col-md-2 hidden-xs">
-                            <div class="box-df p-0">
-                                <div id="accordion-menu" class="accordion-menu">
-                                    <ul>
-                                        <li>
-                                            <a href="/mainpage.html" title=""><i class="fa fa-home"
-                                                    aria-hidden="true"></i>TRANG
-                                                CHỦ</a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:void(0)" title=""><i class="fa fa-tv"
-                                                    aria-hidden="true"></i>THÔNG TIN
-                                                CHUNG</a>
-                                            <ul class="submenu">
-                                                <li>
-                                                    <a href="#">Th&#244;ng tin sinh vi&#234;n</a>
-                                                </li>
-                                            </ul>
-                                            <ul class="submenu">
-                                                <li>
-                                                    <a href="#">Đề xuất cập nhật th&#244;ng tin</a>
-                                                </li>
-                                            </ul>
-                                            <ul class="submenu">
-                                                <li>
-                                                    <a href="#">Dịch vụ trực tuyến</a>
-                                                </li>
-                                            </ul>
-                                            <ul class="submenu">
-                                                <li>
-                                                    <a href="#">Ghi ch&#250; nhắc nhở</a>
-                                                </li>
-                                            </ul>
-                                            <ul class="submenu">
-                                                <li>
-                                                    <a href="#">Cập nhật th&#244;ng tin BHYT</a>
-                                                </li>
-                                            </ul>
-                                            <ul class="submenu">
-                                                <li>
-                                                    <a href="#">Khảo s&#225;t sự kiện</a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:void(0)" title=""><i class="fa fa-mortar-board"
-                                                    aria-hidden="true"></i>HỌC TẬP</a>
-                                            <ul class="submenu">
-                                                <li>
-                                                    <a href="#">Kết quả học tập</a>
-                                                </li>
-                                            </ul>
-                                            <ul class="submenu">
-                                                <li>
-                                                    <a href="#">Lịch theo tuần</a>
-                                                </li>
-                                            </ul>
-                                            <ul class="submenu">
-                                                <li>
-                                                    <a href="#">Lịch theo tiến độ</a>
-                                                </li>
-                                            </ul>
-                                            <ul class="submenu">
-                                                <li>
-                                                    <a href="#">Th&#244;ng tin điểm danh</a>
-                                                </li>
-                                            </ul>
-                                            <ul class="submenu">
-                                                <li>
-                                                    <a href="#">Kết quả r&#232;n luyện</a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:void(0)" title="">
-                                                <i class="fa fa-check-square" aria-hidden="true"></i>ĐĂNG KÝ HỌC PHẦN
-                                            </a>
-                                            <ul class="submenu">
-                                                <li>
-                                                    <a href="#">Chương trình khung</a>
-                                                </li>
-                                            </ul>
-                                            <ul class="submenu">
-                                                <li>
-                                                    <a target="_blank" href="#">Đăng k&#253; học phần</a>
-                                                </li>
-                                            </ul>
-                                            <ul class="submenu">
-                                                <li>
-                                                    <a href="#">Đăng k&#253; m&#244;n học điều kiện</a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:void(0)" title="">
-                                                <i class="fab fa-cc-visa" aria-hidden="true"></i>HỌCPHÍ</a>
-                                            <ul class="submenu">
-                                                <li>
-                                                    <a href="#">Tra cứu c&#244;ng nợ</a>
-                                                </li>
-                                            </ul>
-                                            <ul class="submenu">
-                                                <li>
-                                                    <a href="#">Thanh to&#225;n trực tuyến</a>
-                                                </li>
-                                            </ul>
-                                            <ul class="submenu">
-                                                <li>
-                                                    <a href="#">Thanh to&#225;n nội tr&#250;</a>
-                                                </li>
-                                            </ul>
-                                            <ul class="submenu">
-                                                <li>
-                                                    <a href="#">Phiếu thu tổng hợp</a>
-                                                </li>
-                                            </ul>
-                                            <ul class="submenu">
-                                                <li>
-                                                    <a href="#">Phiếu thu trực tuyến</a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:void(0)" title=""><i class="fa fa-cog"
-                                                    aria-hidden="true"></i>KH&#193;C</a>
-                                            <ul class="submenu">
-                                                <li>
-                                                    <a href="#">Hộp thư sinh vi&#234;n</a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:void(0)" title=""><i class="fa fa-building"
-                                                    aria-hidden="true"></i>K&#221; T&#218;C X&#193;</a>
-                                            <ul class="submenu">
-                                                <li>
-                                                    <a href="#">Đăng k&#253; nội tr&#250;</a>
-                                                </li>
-                                            </ul>
-                                            <ul class="submenu">
-                                                <li>
-                                                    <a href="#">Tra cứu c&#244;ng nợ nội tr&#250;</a>
-                                                </li>
-                                            </ul>
-                                            <ul class="submenu">
-                                                <li>
-                                                    <a href="#">Tra cứu kết quả r&#232;n luyện</a>
-                                                </li>
-                                            </ul>
-                                            <ul class="submenu">
-                                                <li>
-                                                    <a href="#">Tra cứu th&#244;ng tin ph&#242;ng giường</a>
-                                                </li>
-                                            </ul>
-                                            <ul class="submenu">
-                                                <li>
-                                                    <a href="#">Tra cứu nội dung đ&#227; đăng k&#253;</a>
-                                                </li>
-                                            </ul>
-                                            <ul class="submenu">
-                                                <li>
-                                                    <a href="#">Gia hạn đăng k&#253; nội tr&#250;</a>
-                                                </li>
-                                            </ul>
-                                            <ul class="submenu">
-                                                <li>
-                                                    <a href="#">Khai b&#225;o hư hỏng t&#224;i sản</a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                        <script>
-                                            function openLienKet(e) {
-                                                window.open($(e).attr("data-link"), "_blank");
-                                            }
-                                        </script>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
                         <!-- Content -->
-                        <div class="col-md-10 col-xs-12">
+                        <div class="col-md-12 col-xs-12">
                             <div class="box-df">
                                 <div class="portlet">
                                     <div class="portlet-title">
@@ -327,28 +273,10 @@
                             float: left;
                             padding: 5px 0px 0px 0px;
                           ">
-                                                <label class="mt-radio"
-                                                    style="padding-left: 25px; margin-bottom: 0px">
-                                                    <input id="rdoLoaiLich" name="rdoLoaiLich" type="radio" value="0" />
-                                                    <label lang="lichtheotuan-tatca">Tất cả</label>
-                                                    <span></span>
-                                                </label>
-                                                <label class="mt-radio"
-                                                    style="padding-left: 25px; margin-bottom: 0px">
-                                                    <input checked="checked" id="rdoLoaiLich" name="rdoLoaiLich"
-                                                        type="radio" value="1" />
-                                                    <label lang="lichtheotuan-lichhoc">Lịch học</label>
-                                                    <span></span>
-                                                </label>
-                                                <label class="mt-radio"
-                                                    style="padding-left: 25px; margin-bottom: 0px">
-                                                    <input id="rdoLoaiLich" name="rdoLoaiLich" type="radio" value="2" />
-                                                    <label lang="lichtheotuan-lichthi">Lịch thi</label>
-                                                    <span></span>
-                                                </label>
+
                                             </div>
                                             <input id="dateNgayXemLich" name="dateNgayXemLich" type="text"
-                                                value="27/11/2021" />
+                                                value="{{ $ngay }}" />
                                             <script>
                                                 jQuery(function() {
                                                     jQuery("#dateNgayXemLich").kendoDatePicker({
@@ -358,22 +286,22 @@
                                                     });
                                                 });
                                             </script>
+                                            <input type="text" id="curentdate" value="{{ $ngay }}"
+                                                hidden="true" />
                                             <a href="javascript:;" class="btn btn-action" id="btn_HienTai"
+                                                onclick="buildTable({{ $user[0]->masv }}, 'current')"
                                                 lang="lichtheotuan-hientai-button">
                                                 <i class="fa fa-calendar" aria-hidden="true"></i>
                                                 Hiện tại
                                             </a>
-                                            <a href="javascript:;" class="btn btn-action" id="btn_InLich"
-                                                onclick="PrintElem()" lang="lichtheotuan-print-button">
-                                                <i class="fa fa-print" aria-hidden="true"></i>
-                                                In lịch
-                                            </a>
                                             <a href="javascript:;" class="btn btn-action" id="btn_TroVe"
+                                                onclick="buildTable({{ $user[0]->masv }}, 'prev')"
                                                 lang="lichtheotuan-back-button">
                                                 <i class="fa fa-angle-left" aria-hidden="true"></i>
                                                 Trở về
                                             </a>
                                             <a href="javascript:;" class="btn btn-action" id="btn_Tiep"
+                                                onclick="buildTable({{ $user[0]->masv }}, 'next')"
                                                 lang="lichtheotuan-next-button">
                                                 Tiếp
                                                 <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -381,705 +309,800 @@
                                         </div>
                                     </div>
 
-                                    <!-- Lịch ở đây -->
-                                    <table style="text-align:center;" class="table table-bordered table-striped"
-                                        width="100%" role="grid">
-                                        <thead>
-                                            <tr>
-                                                <th style="width:50px"></th>
-                                                <th>Thứ 2</th>
-                                                <th>Thứ 3</th>
-                                                <th>Thứ 4</th>
-                                                <th>Thứ 5</th>
-                                                <th>Thứ 6</th>
-                                                <th>Thứ 7</th>
-                                                <th>Chủ Nhật</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td style="width:50px; font-weight: bold;vertical-align: middle;">Sáng
-                                                </td>
-                                                <td>
-                                                    @foreach ($data as $lichhoc)
-                                                        @if ($lichhoc->buoi == 0 && $lichhoc->thu == 2)
-                                                            <div style="width:100%;" class="content text-left"
-                                                                data-bg="129872" style="text-align: left">
-                                                                <b><a href="javascript:" target=""
-                                                                        style="text-decoration: none; color: #003763; text-align:center; display:block;">{{ $lichhoc->mamh_id }}</a></b>
+                                    <div id="content-table">
+                                        <!-- Lịch ở đây -->
+                                        <table style="text-align:center;"
+                                            class="fl-table table table-bordered text-center no-footer dtr-inline"
+                                            width="100%" role="grid">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width:50px"></th>
+                                                    <th>Thứ 2 <br /> {{ $days[0] }}</th>
+                                                    <th>Thứ 3 <br /> {{ $days[1] }}</th>
+                                                    <th>Thứ 4 <br /> {{ $days[2] }}</th>
+                                                    <th>Thứ 5 <br /> {{ $days[3] }}</th>
+                                                    <th>Thứ 6 <br /> {{ $days[4] }}</th>
+                                                    <th>Thứ 7 <br /> {{ $days[5] }}</th>
+                                                    <th>Chủ Nhật <br /> {{ $days[6] }}</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody
+                                                style="background: url(/template/teacher/Assets/images/transparent-pattern-square-4.png)">
+                                                <tr>
+                                                    <td
+                                                        style="width:50px; font-weight: bold;vertical-align: middle; height: 150px;">
+                                                        Sáng
+                                                    </td>
+                                                    <td style="min-height: 150px;">
+                                                        @foreach ($data as $lichhoc)
+                                                            @if ($lichhoc->buoi == 0 && $lichhoc->thu == 2)
+                                                                <div style="width:100%; flex-direction: column;display: flex; min-height: 150px;justify-content: space-around;border-color:#1da1f2; background-color:#92d6ff;"
+                                                                    class="content text-left" data-bg="129872"
+                                                                    style="text-align: left">
+                                                                    <b><a href="javascript:" target=""
+                                                                            style="text-decoration: none; color: #003763; text-align:center; display:block;">{{ $lichhoc->mamh_id }}</a></b>
 
-                                                                <p style="text-align:center;">
-                                                                    <span lang="lichtheotuan-tiet">Tiết:</span>
-                                                                    {{ $lichhoc->tietbd . ' - ' . $lichhoc->tietkt }}
-                                                                </p>
-                                                                <p lang="giang-duong" style="text-align:center;">Phòng:
-                                                                    {{ $lichhoc->maphong_id }}
-                                                                </p>
-                                                                <div @if (strtotime($lichhoc->ngay) > strtotime($ngay)) class='disableddiv' @endif
-                                                                    style="width:100%; display:flex; justify-content:center;">
-                                                                    <a class="btn btn-danger" href="#"
-                                                                        onclick="viewStudent({{ $user[0]->masv }}, {{ $lichhoc->mahp }}, {{ $lichhoc->tuan }})">
-                                                                        <i class="fas fa-trash"></i><span
-                                                                            style="margin-left: 8px">Xem điểm
-                                                                            danh</span>
-                                                                    </a>
+                                                                    <p style="text-align:center;">
+                                                                        <span lang="lichtheotuan-tiet">Tiết:</span>
+                                                                        {{ $lichhoc->tietbd . ' - ' . $lichhoc->tietkt }}
+                                                                    </p>
+                                                                    <p lang="giang-duong" style="text-align:center;">
+                                                                        Phòng:
+                                                                        {{ $lichhoc->maphong_id }}
+                                                                    </p>
+                                                                    <div @if (strtotime($lichhoc->ngay) > strtotime($ngay)) class='disableddiv' @endif
+                                                                        style="width:100%; display:flex; justify-content:center;">
+                                                                        <a class="btn btn-danger"
+                                                                            style="margin-right:0; border-radius: 5px !important;"
+                                                                            href="#"
+                                                                            onclick="viewStudent({{ $user[0]->masv }}, {{ $lichhoc->mahp }}, {{ $lichhoc->tuan }})">
+                                                                            <i class="fas fa-trash"></i><span
+                                                                                style="margin-left: 8px">Xem điểm
+                                                                                danh</span>
+                                                                        </a>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        @endif
-                                                    @endforeach
-                                                </td>
-                                                <td>
-                                                    @foreach ($data as $lichhoc)
-                                                        @if ($lichhoc->buoi == 0 && $lichhoc->thu == 3)
-                                                            <div style="width:100%;" class="content text-left"
-                                                                data-bg="129872" style="text-align: left">
-                                                                <b><a href="javascript:" target=""
-                                                                        style="text-decoration: none; color: #003763; text-align:center; display:block;">{{ $lichhoc->mamh_id }}</a></b>
+                                                            @endif
+                                                        @endforeach
+                                                    </td>
+                                                    <td style="min-height: 150px;">
+                                                        @foreach ($data as $lichhoc)
+                                                            @if ($lichhoc->buoi == 0 && $lichhoc->thu == 3)
+                                                                <div style="width:100%; flex-direction: column;display: flex; min-height: 150px;justify-content: space-around;border-color:#1da1f2; background-color:#92d6ff;"
+                                                                    class="content text-left" data-bg="129872"
+                                                                    style="text-align: left">
+                                                                    <b><a href="javascript:" target=""
+                                                                            style="text-decoration: none; color: #003763; text-align:center; display:block;">{{ $lichhoc->mamh_id }}</a></b>
 
-                                                                <p style="text-align:center;">
-                                                                    <span lang="lichtheotuan-tiet">Tiết:</span>
-                                                                    {{ $lichhoc->tietbd . ' - ' . $lichhoc->tietkt }}
-                                                                </p>
-                                                                <p lang="giang-duong" style="text-align:center;">Phòng:
-                                                                    {{ $lichhoc->maphong_id }}
-                                                                </p>
+                                                                    <p style="text-align:center;">
+                                                                        <span lang="lichtheotuan-tiet">Tiết:</span>
+                                                                        {{ $lichhoc->tietbd . ' - ' . $lichhoc->tietkt }}
+                                                                    </p>
+                                                                    <p lang="giang-duong" style="text-align:center;">
+                                                                        Phòng:
+                                                                        {{ $lichhoc->maphong_id }}
+                                                                    </p>
 
 
-                                                                <div @if (strtotime($lichhoc->ngay) > strtotime($ngay)) class='disableddiv' @endif
-                                                                    style="width:100%; display:flex; justify-content:center;">
-                                                                    <a class="btn btn-danger" href="#"
-                                                                        onclick="viewStudent({{ $user[0]->masv }}, {{ $lichhoc->mahp }}, {{ $lichhoc->tuan }})">
-                                                                        <i class="fas fa-trash"></i><span
-                                                                            style="margin-left: 8px">Xem điểm
-                                                                            danh</span>
-                                                                    </a>
+                                                                    <div @if (strtotime($lichhoc->ngay) > strtotime($ngay)) class='disableddiv' @endif
+                                                                        style="width:100%; display:flex; justify-content:center;">
+                                                                        <a class="btn btn-danger"
+                                                                            style="margin-right:0; border-radius: 5px !important;"
+                                                                            href="#"
+                                                                            onclick="viewStudent({{ $user[0]->masv }}, {{ $lichhoc->mahp }}, {{ $lichhoc->tuan }})">
+                                                                            <i class="fas fa-trash"></i><span
+                                                                                style="margin-left: 8px">Xem điểm
+                                                                                danh</span>
+                                                                        </a>
+                                                                    </div>
+
+
                                                                 </div>
+                                                            @endif
+                                                        @endforeach
+                                                    </td>
+                                                    <td style="min-height: 150px;">
+                                                        @foreach ($data as $lichhoc)
+                                                            @if ($lichhoc->buoi == 0 && $lichhoc->thu == 4)
+                                                                <div style="width:100%; flex-direction: column;display: flex; min-height: 150px;justify-content: space-around;border-color:#1da1f2; background-color:#92d6ff;"
+                                                                    class="content text-left" data-bg="129872"
+                                                                    style="text-align: left">
+                                                                    <b><a href="javascript:" target=""
+                                                                            style="text-decoration: none; color: #003763; text-align:center; display:block;">{{ $lichhoc->mamh_id }}</a></b>
+
+                                                                    <p style="text-align:center;">
+                                                                        <span lang="lichtheotuan-tiet">Tiết:</span>
+                                                                        {{ $lichhoc->tietbd . ' - ' . $lichhoc->tietkt }}
+                                                                    </p>
+                                                                    <p lang="giang-duong" style="text-align:center;">
+                                                                        Phòng:
+                                                                        {{ $lichhoc->maphong_id }}
+                                                                    </p>
 
 
-                                                            </div>
-                                                        @endif
-                                                    @endforeach
-                                                </td>
-                                                <td>
-                                                    @foreach ($data as $lichhoc)
-                                                        @if ($lichhoc->buoi == 0 && $lichhoc->thu == 4)
-                                                            <div style="width:100%;" class="content text-left"
-                                                                data-bg="129872" style="text-align: left">
-                                                                <b><a href="javascript:" target=""
-                                                                        style="text-decoration: none; color: #003763; text-align:center; display:block;">{{ $lichhoc->mamh_id }}</a></b>
-
-                                                                <p style="text-align:center;">
-                                                                    <span lang="lichtheotuan-tiet">Tiết:</span>
-                                                                    {{ $lichhoc->tietbd . ' - ' . $lichhoc->tietkt }}
-                                                                </p>
-                                                                <p lang="giang-duong" style="text-align:center;">Phòng:
-                                                                    {{ $lichhoc->maphong_id }}
-                                                                </p>
+                                                                    <div @if (strtotime($lichhoc->ngay) > strtotime($ngay)) class='disableddiv' @endif
+                                                                        style="width:100%; display:flex; justify-content:center;">
+                                                                        <a class="btn btn-danger"
+                                                                            style="margin-right:0; border-radius: 5px !important;"
+                                                                            href="#"
+                                                                            onclick="viewStudent({{ $user[0]->masv }}, {{ $lichhoc->mahp }}, {{ $lichhoc->tuan }})">
+                                                                            <i class="fas fa-trash"></i><span
+                                                                                style="margin-left: 8px">Xem điểm
+                                                                                danh</span>
+                                                                        </a>
+                                                                    </div>
 
 
-                                                                <div @if (strtotime($lichhoc->ngay) > strtotime($ngay)) class='disableddiv' @endif
-                                                                    style="width:100%; display:flex; justify-content:center;">
-                                                                    <a class="btn btn-danger" href="#"
-                                                                        onclick="viewStudent({{ $user[0]->masv }}, {{ $lichhoc->mahp }}, {{ $lichhoc->tuan }})">
-                                                                        <i class="fas fa-trash"></i><span
-                                                                            style="margin-left: 8px">Xem điểm
-                                                                            danh</span>
-                                                                    </a>
                                                                 </div>
+                                                            @endif
+                                                        @endforeach
+                                                    </td>
+                                                    <td style="min-height: 150px;">
+                                                        @foreach ($data as $lichhoc)
+                                                            @if ($lichhoc->buoi == 0 && $lichhoc->thu == 5)
+                                                                <div style="width:100%; flex-direction: column;display: flex; min-height: 150px;justify-content: space-around;border-color:#1da1f2; background-color:#92d6ff;"
+                                                                    class="content text-left" data-bg="129872"
+                                                                    style="text-align: left">
+                                                                    <b><a href="javascript:" target=""
+                                                                            style="text-decoration: none; color: #003763; text-align:center; display:block;">{{ $lichhoc->mamh_id }}</a></b>
+
+                                                                    <p style="text-align:center;">
+                                                                        <span lang="lichtheotuan-tiet">Tiết:</span>
+                                                                        {{ $lichhoc->tietbd . ' - ' . $lichhoc->tietkt }}
+                                                                    </p>
+                                                                    <p lang="giang-duong" style="text-align:center;">
+                                                                        Phòng:
+                                                                        {{ $lichhoc->maphong_id }}
+                                                                    </p>
 
 
-                                                            </div>
-                                                        @endif
-                                                    @endforeach
-                                                </td>
-                                                <td>
-                                                    @foreach ($data as $lichhoc)
-                                                        @if ($lichhoc->buoi == 0 && $lichhoc->thu == 5)
-                                                            <div style="width:100%;" class="content text-left"
-                                                                data-bg="129872" style="text-align: left">
-                                                                <b><a href="javascript:" target=""
-                                                                        style="text-decoration: none; color: #003763; text-align:center; display:block;">{{ $lichhoc->mamh_id }}</a></b>
-
-                                                                <p style="text-align:center;">
-                                                                    <span lang="lichtheotuan-tiet">Tiết:</span>
-                                                                    {{ $lichhoc->tietbd . ' - ' . $lichhoc->tietkt }}
-                                                                </p>
-                                                                <p lang="giang-duong" style="text-align:center;">Phòng:
-                                                                    {{ $lichhoc->maphong_id }}
-                                                                </p>
+                                                                    <div @if (strtotime($lichhoc->ngay) > strtotime($ngay)) class='disableddiv' @endif
+                                                                        style="width:100%; display:flex; justify-content:center;">
+                                                                        <a class="btn btn-danger"
+                                                                            style="margin-right:0; border-radius: 5px !important;"
+                                                                            href="#"
+                                                                            onclick="viewStudent({{ $user[0]->masv }}, {{ $lichhoc->mahp }}, {{ $lichhoc->tuan }})">
+                                                                            <i class="fas fa-trash"></i><span
+                                                                                style="margin-left: 8px">Xem điểm
+                                                                                danh</span>
+                                                                        </a>
+                                                                    </div>
 
 
-                                                                <div @if (strtotime($lichhoc->ngay) > strtotime($ngay)) class='disableddiv' @endif
-                                                                    style="width:100%; display:flex; justify-content:center;">
-                                                                    <a class="btn btn-danger" href="#"
-                                                                        onclick="viewStudent({{ $user[0]->masv }}, {{ $lichhoc->mahp }}, {{ $lichhoc->tuan }})">
-                                                                        <i class="fas fa-trash"></i><span
-                                                                            style="margin-left: 8px">Xem điểm
-                                                                            danh</span>
-                                                                    </a>
                                                                 </div>
+                                                            @endif
+                                                        @endforeach
+                                                    </td>
+                                                    <td style="min-height: 150px;">
+                                                        @foreach ($data as $lichhoc)
+                                                            @if ($lichhoc->buoi == 0 && $lichhoc->thu == 6)
+                                                                <div style="width:100%; flex-direction: column;display: flex; min-height: 150px;justify-content: space-around;border-color:#1da1f2; background-color:#92d6ff;"
+                                                                    class="content text-left" data-bg="129872"
+                                                                    style="text-align: left">
+                                                                    <b><a href="javascript:" target=""
+                                                                            style="text-decoration: none; color: #003763; text-align:center; display:block;">{{ $lichhoc->mamh_id }}</a></b>
+
+                                                                    <p style="text-align:center;">
+                                                                        <span lang="lichtheotuan-tiet">Tiết:</span>
+                                                                        {{ $lichhoc->tietbd . ' - ' . $lichhoc->tietkt }}
+                                                                    </p>
+                                                                    <p lang="giang-duong" style="text-align:center;">
+                                                                        Phòng:
+                                                                        {{ $lichhoc->maphong_id }}
+                                                                    </p>
 
 
-                                                            </div>
-                                                        @endif
-                                                    @endforeach
-                                                </td>
-                                                <td>
-                                                    @foreach ($data as $lichhoc)
-                                                        @if ($lichhoc->buoi == 0 && $lichhoc->thu == 6)
-                                                            <div style="width:100%;" class="content text-left"
-                                                                data-bg="129872" style="text-align: left">
-                                                                <b><a href="javascript:" target=""
-                                                                        style="text-decoration: none; color: #003763; text-align:center; display:block;">{{ $lichhoc->mamh_id }}</a></b>
-
-                                                                <p style="text-align:center;">
-                                                                    <span lang="lichtheotuan-tiet">Tiết:</span>
-                                                                    {{ $lichhoc->tietbd . ' - ' . $lichhoc->tietkt }}
-                                                                </p>
-                                                                <p lang="giang-duong" style="text-align:center;">Phòng:
-                                                                    {{ $lichhoc->maphong_id }}
-                                                                </p>
+                                                                    <div @if (strtotime($lichhoc->ngay) > strtotime($ngay)) class='disableddiv' @endif
+                                                                        style="width:100%; display:flex; justify-content:center;">
+                                                                        <a class="btn btn-danger"
+                                                                            style="margin-right:0; border-radius: 5px !important;"
+                                                                            href="#"
+                                                                            onclick="viewStudent({{ $user[0]->masv }}, {{ $lichhoc->mahp }}, {{ $lichhoc->tuan }})">
+                                                                            <i class="fas fa-trash"></i><span
+                                                                                style="margin-left: 8px">Xem điểm
+                                                                                danh</span>
+                                                                        </a>
+                                                                    </div>
 
 
-                                                                <div @if (strtotime($lichhoc->ngay) > strtotime($ngay)) class='disableddiv' @endif
-                                                                    style="width:100%; display:flex; justify-content:center;">
-                                                                    <a class="btn btn-danger" href="#"
-                                                                        onclick="viewStudent({{ $user[0]->masv }}, {{ $lichhoc->mahp }}, {{ $lichhoc->tuan }})">
-                                                                        <i class="fas fa-trash"></i><span
-                                                                            style="margin-left: 8px">Xem điểm
-                                                                            danh</span>
-                                                                    </a>
                                                                 </div>
+                                                            @endif
+                                                        @endforeach
+                                                    </td>
+                                                    <td style="min-height: 150px;">
+                                                        @foreach ($data as $lichhoc)
+                                                            @if ($lichhoc->buoi == 0 && $lichhoc->thu == 7)
+                                                                <div style="width:100%; flex-direction: column;display: flex; min-height: 150px;justify-content: space-around;border-color:#1da1f2; background-color:#92d6ff;"
+                                                                    class="content text-left" data-bg="129872"
+                                                                    style="text-align: left">
+                                                                    <b><a href="javascript:" target=""
+                                                                            style="text-decoration: none; color: #003763; text-align:center; display:block;">{{ $lichhoc->mamh_id }}</a></b>
+
+                                                                    <p style="text-align:center;">
+                                                                        <span lang="lichtheotuan-tiet">Tiết:</span>
+                                                                        {{ $lichhoc->tietbd . ' - ' . $lichhoc->tietkt }}
+                                                                    </p>
+                                                                    <p lang="giang-duong" style="text-align:center;">
+                                                                        Phòng:
+                                                                        {{ $lichhoc->maphong_id }}
+                                                                    </p>
 
 
-                                                            </div>
-                                                        @endif
-                                                    @endforeach
-                                                </td>
-                                                <td>
-                                                    @foreach ($data as $lichhoc)
-                                                        @if ($lichhoc->buoi == 0 && $lichhoc->thu == 7)
-                                                            <div style="width:100%;" class="content text-left"
-                                                                data-bg="129872" style="text-align: left">
-                                                                <b><a href="javascript:" target=""
-                                                                        style="text-decoration: none; color: #003763; text-align:center; display:block;">{{ $lichhoc->mamh_id }}</a></b>
-
-                                                                <p style="text-align:center;">
-                                                                    <span lang="lichtheotuan-tiet">Tiết:</span>
-                                                                    {{ $lichhoc->tietbd . ' - ' . $lichhoc->tietkt }}
-                                                                </p>
-                                                                <p lang="giang-duong" style="text-align:center;">Phòng:
-                                                                    {{ $lichhoc->maphong_id }}
-                                                                </p>
+                                                                    <div @if (strtotime($lichhoc->ngay) > strtotime($ngay)) class='disableddiv' @endif
+                                                                        style="width:100%; display:flex; justify-content:center;">
+                                                                        <a class="btn btn-danger"
+                                                                            style="margin-right:0; border-radius: 5px !important;"
+                                                                            href="#"
+                                                                            onclick="viewStudent({{ $user[0]->masv }}, {{ $lichhoc->mahp }}, {{ $lichhoc->tuan }})">
+                                                                            <i class="fas fa-trash"></i><span
+                                                                                style="margin-left: 8px">Xem điểm
+                                                                                danh</span>
+                                                                        </a>
+                                                                    </div>
 
 
-                                                                <div @if (strtotime($lichhoc->ngay) > strtotime($ngay)) class='disableddiv' @endif
-                                                                    style="width:100%; display:flex; justify-content:center;">
-                                                                    <a class="btn btn-danger" href="#"
-                                                                        onclick="viewStudent({{ $user[0]->masv }}, {{ $lichhoc->mahp }}, {{ $lichhoc->tuan }})">
-                                                                        <i class="fas fa-trash"></i><span
-                                                                            style="margin-left: 8px">Xem điểm
-                                                                            danh</span>
-                                                                    </a>
                                                                 </div>
+                                                            @endif
+                                                        @endforeach
+                                                    </td>
+                                                    <td style="min-height: 150px;">
+                                                        @foreach ($data as $lichhoc)
+                                                            @if ($lichhoc->buoi == 0 && $lichhoc->thu == 8)
+                                                                <div style="width:100%; flex-direction: column;display: flex; min-height: 150px;justify-content: space-around;border-color:#1da1f2; background-color:#92d6ff;"
+                                                                    class="content text-left" data-bg="129872"
+                                                                    style="text-align: left">
+                                                                    <b><a href="javascript:" target=""
+                                                                            style="text-decoration: none; color: #003763; text-align:center; display:block;">{{ $lichhoc->mamh_id }}</a></b>
+
+                                                                    <p style="text-align:center;">
+                                                                        <span lang="lichtheotuan-tiet">Tiết:</span>
+                                                                        {{ $lichhoc->tietbd . ' - ' . $lichhoc->tietkt }}
+                                                                    </p>
+                                                                    <p lang="giang-duong" style="text-align:center;">
+                                                                        Phòng:
+                                                                        {{ $lichhoc->maphong_id }}
+                                                                    </p>
 
 
-                                                            </div>
-                                                        @endif
-                                                    @endforeach
-                                                </td>
-                                                <td>
-                                                    @foreach ($data as $lichhoc)
-                                                        @if ($lichhoc->buoi == 0 && $lichhoc->thu == 8)
-                                                            <div style="width:100%;" class="content text-left"
-                                                                data-bg="129872" style="text-align: left">
-                                                                <b><a href="javascript:" target=""
-                                                                        style="text-decoration: none; color: #003763; text-align:center; display:block;">{{ $lichhoc->mamh_id }}</a></b>
-
-                                                                <p style="text-align:center;">
-                                                                    <span lang="lichtheotuan-tiet">Tiết:</span>
-                                                                    {{ $lichhoc->tietbd . ' - ' . $lichhoc->tietkt }}
-                                                                </p>
-                                                                <p lang="giang-duong" style="text-align:center;">Phòng:
-                                                                    {{ $lichhoc->maphong_id }}
-                                                                </p>
+                                                                    <div @if (strtotime($lichhoc->ngay) > strtotime($ngay)) class='disableddiv' @endif
+                                                                        style="width:100%; display:flex; justify-content:center;">
+                                                                        <a class="btn btn-danger"
+                                                                            style="margin-right:0; border-radius: 5px !important;"
+                                                                            href="#"
+                                                                            onclick="viewStudent({{ $user[0]->masv }}, {{ $lichhoc->mahp }}, {{ $lichhoc->tuan }})">
+                                                                            <i class="fas fa-trash"></i><span
+                                                                                style="margin-left: 8px">Xem điểm
+                                                                                danh</span>
+                                                                        </a>
+                                                                    </div>
 
 
-                                                                <div @if (strtotime($lichhoc->ngay) > strtotime($ngay)) class='disableddiv' @endif
-                                                                    style="width:100%; display:flex; justify-content:center;">
-                                                                    <a class="btn btn-danger" href="#"
-                                                                        onclick="viewStudent({{ $user[0]->masv }}, {{ $lichhoc->mahp }}, {{ $lichhoc->tuan }})">
-                                                                        <i class="fas fa-trash"></i><span
-                                                                            style="margin-left: 8px">Xem điểm
-                                                                            danh</span>
-                                                                    </a>
                                                                 </div>
+                                                            @endif
+                                                        @endforeach
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td
+                                                        style="width:50px; font-weight: bold;vertical-align: middle;height: 150px;">
+                                                        Chiều
+                                                    </td>
+                                                    <td style="min-height: 150px;">
+                                                        @foreach ($data as $lichhoc)
+                                                            @if ($lichhoc->buoi == 1 && $lichhoc->thu == 2)
+                                                                <div style="width:100%; flex-direction: column;display: flex; min-height: 150px;justify-content: space-around;border-color:#1da1f2; background-color:#92d6ff;"
+                                                                    class="content text-left" data-bg="129872"
+                                                                    style="text-align: left">
+                                                                    <b><a href="javascript:" target=""
+                                                                            style="text-decoration: none; color: #003763; text-align:center; display:block;">{{ $lichhoc->mamh_id }}</a></b>
+
+                                                                    <p style="text-align:center;">
+                                                                        <span lang="lichtheotuan-tiet">Tiết:</span>
+                                                                        {{ $lichhoc->tietbd . ' - ' . $lichhoc->tietkt }}
+                                                                    </p>
+                                                                    <p lang="giang-duong" style="text-align:center;">
+                                                                        Phòng:
+                                                                        {{ $lichhoc->maphong_id }}
+                                                                    </p>
 
 
-                                                            </div>
-                                                        @endif
-                                                    @endforeach
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td style="width:50px; font-weight: bold;vertical-align: middle;">Chiều
-                                                </td>
-                                                <td>
-                                                    @foreach ($data as $lichhoc)
-                                                        @if ($lichhoc->buoi == 1 && $lichhoc->thu == 2)
-                                                            <div style="width:100%;" class="content text-left"
-                                                                data-bg="129872" style="text-align: left">
-                                                                <b><a href="javascript:" target=""
-                                                                        style="text-decoration: none; color: #003763; text-align:center; display:block;">{{ $lichhoc->mamh_id }}</a></b>
-
-                                                                <p style="text-align:center;">
-                                                                    <span lang="lichtheotuan-tiet">Tiết:</span>
-                                                                    {{ $lichhoc->tietbd . ' - ' . $lichhoc->tietkt }}
-                                                                </p>
-                                                                <p lang="giang-duong" style="text-align:center;">Phòng:
-                                                                    {{ $lichhoc->maphong_id }}
-                                                                </p>
+                                                                    <div @if (strtotime($lichhoc->ngay) > strtotime($ngay)) class='disableddiv' @endif
+                                                                        style="width:100%; display:flex; justify-content:center;">
+                                                                        <a class="btn btn-danger"
+                                                                            style="margin-right:0; border-radius: 5px !important;"
+                                                                            href="#"
+                                                                            onclick="viewStudent({{ $user[0]->masv }}, {{ $lichhoc->mahp }}, {{ $lichhoc->tuan }})">
+                                                                            <i class="fas fa-trash"></i><span
+                                                                                style="margin-left: 8px">Xem điểm
+                                                                                danh</span>
+                                                                        </a>
+                                                                    </div>
 
 
-                                                                <div @if (strtotime($lichhoc->ngay) > strtotime($ngay)) class='disableddiv' @endif
-                                                                    style="width:100%; display:flex; justify-content:center;">
-                                                                    <a class="btn btn-danger" href="#"
-                                                                        onclick="viewStudent({{ $user[0]->masv }}, {{ $lichhoc->mahp }}, {{ $lichhoc->tuan }})">
-                                                                        <i class="fas fa-trash"></i><span
-                                                                            style="margin-left: 8px">Xem điểm
-                                                                            danh</span>
-                                                                    </a>
                                                                 </div>
+                                                            @endif
+                                                        @endforeach
+                                                    </td>
+                                                    <td style="min-height: 150px;">
+                                                        @foreach ($data as $lichhoc)
+                                                            @if ($lichhoc->buoi == 1 && $lichhoc->thu == 3)
+                                                                <div style="width:100%; flex-direction: column;display: flex; min-height: 150px;justify-content: space-around;border-color:#1da1f2; background-color:#92d6ff;"
+                                                                    class="content text-left" data-bg="129872"
+                                                                    style="text-align: left">
+                                                                    <b><a href="javascript:" target=""
+                                                                            style="text-decoration: none; color: #003763; text-align:center; display:block;">{{ $lichhoc->mamh_id }}</a></b>
+
+                                                                    <p style="text-align:center;">
+                                                                        <span lang="lichtheotuan-tiet">Tiết:</span>
+                                                                        {{ $lichhoc->tietbd . ' - ' . $lichhoc->tietkt }}
+                                                                    </p>
+                                                                    <p lang="giang-duong" style="text-align:center;">
+                                                                        Phòng:
+                                                                        {{ $lichhoc->maphong_id }}
+                                                                    </p>
 
 
-                                                            </div>
-                                                        @endif
-                                                    @endforeach
-                                                </td>
-                                                <td>
-                                                    @foreach ($data as $lichhoc)
-                                                        @if ($lichhoc->buoi == 1 && $lichhoc->thu == 3)
-                                                            <div style="width:100%;" class="content text-left"
-                                                                data-bg="129872" style="text-align: left">
-                                                                <b><a href="javascript:" target=""
-                                                                        style="text-decoration: none; color: #003763; text-align:center; display:block;">{{ $lichhoc->mamh_id }}</a></b>
-
-                                                                <p style="text-align:center;">
-                                                                    <span lang="lichtheotuan-tiet">Tiết:</span>
-                                                                    {{ $lichhoc->tietbd . ' - ' . $lichhoc->tietkt }}
-                                                                </p>
-                                                                <p lang="giang-duong" style="text-align:center;">Phòng:
-                                                                    {{ $lichhoc->maphong_id }}
-                                                                </p>
+                                                                    <div @if (strtotime($lichhoc->ngay) > strtotime($ngay)) class='disableddiv' @endif
+                                                                        style="width:100%; display:flex; justify-content:center;">
+                                                                        <a class="btn btn-danger"
+                                                                            style="margin-right:0; border-radius: 5px !important;"
+                                                                            href="#"
+                                                                            onclick="viewStudent({{ $user[0]->masv }}, {{ $lichhoc->mahp }}, {{ $lichhoc->tuan }})">
+                                                                            <i class="fas fa-trash"></i><span
+                                                                                style="margin-left: 8px">Xem điểm
+                                                                                danh</span>
+                                                                        </a>
+                                                                    </div>
 
 
-                                                                <div @if (strtotime($lichhoc->ngay) > strtotime($ngay)) class='disableddiv' @endif
-                                                                    style="width:100%; display:flex; justify-content:center;">
-                                                                    <a class="btn btn-danger" href="#"
-                                                                        onclick="viewStudent({{ $user[0]->masv }}, {{ $lichhoc->mahp }}, {{ $lichhoc->tuan }})">
-                                                                        <i class="fas fa-trash"></i><span
-                                                                            style="margin-left: 8px">Xem điểm
-                                                                            danh</span>
-                                                                    </a>
                                                                 </div>
+                                                            @endif
+                                                        @endforeach
+                                                    </td>
+                                                    <td style="min-height: 150px;">
+                                                        @foreach ($data as $lichhoc)
+                                                            @if ($lichhoc->buoi == 1 && $lichhoc->thu == 4)
+                                                                <div style="width:100%; flex-direction: column;display: flex; min-height: 150px;justify-content: space-around;border-color:#1da1f2; background-color:#92d6ff;"
+                                                                    class="content text-left" data-bg="129872"
+                                                                    style="text-align: left">
+                                                                    <b><a href="javascript:" target=""
+                                                                            style="text-decoration: none; color: #003763; text-align:center; display:block;">{{ $lichhoc->mamh_id }}</a></b>
+
+                                                                    <p style="text-align:center;">
+                                                                        <span lang="lichtheotuan-tiet">Tiết:</span>
+                                                                        {{ $lichhoc->tietbd . ' - ' . $lichhoc->tietkt }}
+                                                                    </p>
+                                                                    <p lang="giang-duong" style="text-align:center;">
+                                                                        Phòng:
+                                                                        {{ $lichhoc->maphong_id }}
+                                                                    </p>
 
 
-                                                            </div>
-                                                        @endif
-                                                    @endforeach
-                                                </td>
-                                                <td>
-                                                    @foreach ($data as $lichhoc)
-                                                        @if ($lichhoc->buoi == 1 && $lichhoc->thu == 4)
-                                                            <div style="width:100%;" class="content text-left"
-                                                                data-bg="129872" style="text-align: left">
-                                                                <b><a href="javascript:" target=""
-                                                                        style="text-decoration: none; color: #003763; text-align:center; display:block;">{{ $lichhoc->mamh_id }}</a></b>
-
-                                                                <p style="text-align:center;">
-                                                                    <span lang="lichtheotuan-tiet">Tiết:</span>
-                                                                    {{ $lichhoc->tietbd . ' - ' . $lichhoc->tietkt }}
-                                                                </p>
-                                                                <p lang="giang-duong" style="text-align:center;">Phòng:
-                                                                    {{ $lichhoc->maphong_id }}
-                                                                </p>
+                                                                    <div @if (strtotime($lichhoc->ngay) > strtotime($ngay)) class='disableddiv' @endif
+                                                                        style="width:100%; display:flex; justify-content:center;">
+                                                                        <a class="btn btn-danger"
+                                                                            style="margin-right:0; border-radius: 5px !important;"
+                                                                            href="#"
+                                                                            onclick="viewStudent({{ $user[0]->masv }}, {{ $lichhoc->mahp }}, {{ $lichhoc->tuan }})">
+                                                                            <i class="fas fa-trash"></i><span
+                                                                                style="margin-left: 8px">Xem điểm
+                                                                                danh</span>
+                                                                        </a>
+                                                                    </div>
 
 
-                                                                <div @if (strtotime($lichhoc->ngay) > strtotime($ngay)) class='disableddiv' @endif
-                                                                    style="width:100%; display:flex; justify-content:center;">
-                                                                    <a class="btn btn-danger" href="#"
-                                                                        onclick="viewStudent({{ $user[0]->masv }}, {{ $lichhoc->mahp }}, {{ $lichhoc->tuan }})">
-                                                                        <i class="fas fa-trash"></i><span
-                                                                            style="margin-left: 8px">Xem điểm
-                                                                            danh</span>
-                                                                    </a>
                                                                 </div>
+                                                            @endif
+                                                        @endforeach
+                                                    </td>
+                                                    <td style="min-height: 150px;">
+                                                        @foreach ($data as $lichhoc)
+                                                            @if ($lichhoc->buoi == 1 && $lichhoc->thu == 5)
+                                                                <div style="width:100%; flex-direction: column;display: flex; min-height: 150px;justify-content: space-around;border-color:#1da1f2; background-color:#92d6ff;"
+                                                                    class="content text-left" data-bg="129872"
+                                                                    style="text-align: left">
+                                                                    <b><a href="javascript:" target=""
+                                                                            style="text-decoration: none; color: #003763; text-align:center; display:block;">{{ $lichhoc->mamh_id }}</a></b>
+
+                                                                    <p style="text-align:center;">
+                                                                        <span lang="lichtheotuan-tiet">Tiết:</span>
+                                                                        {{ $lichhoc->tietbd . ' - ' . $lichhoc->tietkt }}
+                                                                    </p>
+                                                                    <p lang="giang-duong" style="text-align:center;">
+                                                                        Phòng:
+                                                                        {{ $lichhoc->maphong_id }}
+                                                                    </p>
 
 
-                                                            </div>
-                                                        @endif
-                                                    @endforeach
-                                                </td>
-                                                <td>
-                                                    @foreach ($data as $lichhoc)
-                                                        @if ($lichhoc->buoi == 1 && $lichhoc->thu == 5)
-                                                            <div style="width:100%;" class="content text-left"
-                                                                data-bg="129872" style="text-align: left">
-                                                                <b><a href="javascript:" target=""
-                                                                        style="text-decoration: none; color: #003763; text-align:center; display:block;">{{ $lichhoc->mamh_id }}</a></b>
-
-                                                                <p style="text-align:center;">
-                                                                    <span lang="lichtheotuan-tiet">Tiết:</span>
-                                                                    {{ $lichhoc->tietbd . ' - ' . $lichhoc->tietkt }}
-                                                                </p>
-                                                                <p lang="giang-duong" style="text-align:center;">Phòng:
-                                                                    {{ $lichhoc->maphong_id }}
-                                                                </p>
+                                                                    <div @if (strtotime($lichhoc->ngay) > strtotime($ngay)) class='disableddiv' @endif
+                                                                        style="width:100%; display:flex; justify-content:center;">
+                                                                        <a class="btn btn-danger"
+                                                                            style="margin-right:0; border-radius: 5px !important;"
+                                                                            href="#"
+                                                                            onclick="viewStudent({{ $user[0]->masv }}, {{ $lichhoc->mahp }}, {{ $lichhoc->tuan }})">
+                                                                            <i class="fas fa-trash"></i><span
+                                                                                style="margin-left: 8px">Xem điểm
+                                                                                danh</span>
+                                                                        </a>
+                                                                    </div>
 
 
-                                                                <div @if (strtotime($lichhoc->ngay) > strtotime($ngay)) class='disableddiv' @endif
-                                                                    style="width:100%; display:flex; justify-content:center;">
-                                                                    <a class="btn btn-danger" href="#"
-                                                                        onclick="viewStudent({{ $user[0]->masv }}, {{ $lichhoc->mahp }}, {{ $lichhoc->tuan }})">
-                                                                        <i class="fas fa-trash"></i><span
-                                                                            style="margin-left: 8px">Xem điểm
-                                                                            danh</span>
-                                                                    </a>
                                                                 </div>
+                                                            @endif
+                                                        @endforeach
+                                                    </td>
+                                                    <td style="min-height: 150px;">
+                                                        @foreach ($data as $lichhoc)
+                                                            @if ($lichhoc->buoi == 1 && $lichhoc->thu == 6)
+                                                                <div style="width:100%; flex-direction: column;display: flex; min-height: 150px;justify-content: space-around;border-color:#1da1f2; background-color:#92d6ff;"
+                                                                    class="content text-left" data-bg="129872"
+                                                                    style="text-align: left">
+                                                                    <b><a href="javascript:" target=""
+                                                                            style="text-decoration: none; color: #003763; text-align:center; display:block;">{{ $lichhoc->mamh_id }}</a></b>
+
+                                                                    <p style="text-align:center;">
+                                                                        <span lang="lichtheotuan-tiet">Tiết:</span>
+                                                                        {{ $lichhoc->tietbd . ' - ' . $lichhoc->tietkt }}
+                                                                    </p>
+                                                                    <p lang="giang-duong" style="text-align:center;">
+                                                                        Phòng:
+                                                                        {{ $lichhoc->maphong_id }}
+                                                                    </p>
 
 
-                                                            </div>
-                                                        @endif
-                                                    @endforeach
-                                                </td>
-                                                <td>
-                                                    @foreach ($data as $lichhoc)
-                                                        @if ($lichhoc->buoi == 1 && $lichhoc->thu == 6)
-                                                            <div style="width:100%;" class="content text-left"
-                                                                data-bg="129872" style="text-align: left">
-                                                                <b><a href="javascript:" target=""
-                                                                        style="text-decoration: none; color: #003763; text-align:center; display:block;">{{ $lichhoc->mamh_id }}</a></b>
-
-                                                                <p style="text-align:center;">
-                                                                    <span lang="lichtheotuan-tiet">Tiết:</span>
-                                                                    {{ $lichhoc->tietbd . ' - ' . $lichhoc->tietkt }}
-                                                                </p>
-                                                                <p lang="giang-duong" style="text-align:center;">Phòng:
-                                                                    {{ $lichhoc->maphong_id }}
-                                                                </p>
+                                                                    <div @if (strtotime($lichhoc->ngay) > strtotime($ngay)) class='disableddiv' @endif
+                                                                        style="width:100%; display:flex; justify-content:center;">
+                                                                        <a class="btn btn-danger"
+                                                                            style="margin-right:0; border-radius: 5px !important;"
+                                                                            href="#"
+                                                                            onclick="viewStudent({{ $user[0]->masv }}, {{ $lichhoc->mahp }}, {{ $lichhoc->tuan }})">
+                                                                            <i class="fas fa-trash"></i><span
+                                                                                style="margin-left: 8px">Xem điểm
+                                                                                danh</span>
+                                                                        </a>
+                                                                    </div>
 
 
-                                                                <div @if (strtotime($lichhoc->ngay) > strtotime($ngay)) class='disableddiv' @endif
-                                                                    style="width:100%; display:flex; justify-content:center;">
-                                                                    <a class="btn btn-danger" href="#"
-                                                                        onclick="viewStudent({{ $user[0]->masv }}, {{ $lichhoc->mahp }}, {{ $lichhoc->tuan }})">
-                                                                        <i class="fas fa-trash"></i><span
-                                                                            style="margin-left: 8px">Xem điểm
-                                                                            danh</span>
-                                                                    </a>
                                                                 </div>
+                                                            @endif
+                                                        @endforeach
+                                                    </td>
+                                                    <td style="min-height: 150px;">
+                                                        @foreach ($data as $lichhoc)
+                                                            @if ($lichhoc->buoi == 1 && $lichhoc->thu == 7)
+                                                                <div style="width:100%; flex-direction: column;display: flex; min-height: 150px;justify-content: space-around;border-color:#1da1f2; background-color:#92d6ff;"
+                                                                    class="content text-left" data-bg="129872"
+                                                                    style="text-align: left">
+                                                                    <b><a href="javascript:" target=""
+                                                                            style="text-decoration: none; color: #003763; text-align:center; display:block;">{{ $lichhoc->mamh_id }}</a></b>
+
+                                                                    <p style="text-align:center;">
+                                                                        <span lang="lichtheotuan-tiet">Tiết:</span>
+                                                                        {{ $lichhoc->tietbd . ' - ' . $lichhoc->tietkt }}
+                                                                    </p>
+                                                                    <p lang="giang-duong" style="text-align:center;">
+                                                                        Phòng:
+                                                                        {{ $lichhoc->maphong_id }}
+                                                                    </p>
 
 
-                                                            </div>
-                                                        @endif
-                                                    @endforeach
-                                                </td>
-                                                <td>
-                                                    @foreach ($data as $lichhoc)
-                                                        @if ($lichhoc->buoi == 1 && $lichhoc->thu == 7)
-                                                            <div style="width:100%;" class="content text-left"
-                                                                data-bg="129872" style="text-align: left">
-                                                                <b><a href="javascript:" target=""
-                                                                        style="text-decoration: none; color: #003763; text-align:center; display:block;">{{ $lichhoc->mamh_id }}</a></b>
-
-                                                                <p style="text-align:center;">
-                                                                    <span lang="lichtheotuan-tiet">Tiết:</span>
-                                                                    {{ $lichhoc->tietbd . ' - ' . $lichhoc->tietkt }}
-                                                                </p>
-                                                                <p lang="giang-duong" style="text-align:center;">Phòng:
-                                                                    {{ $lichhoc->maphong_id }}
-                                                                </p>
+                                                                    <div @if (strtotime($lichhoc->ngay) > strtotime($ngay)) class='disableddiv' @endif
+                                                                        style="width:100%; display:flex; justify-content:center;">
+                                                                        <a class="btn btn-danger"
+                                                                            style="margin-right:0; border-radius: 5px !important;"
+                                                                            href="#"
+                                                                            onclick="viewStudent({{ $user[0]->masv }}, {{ $lichhoc->mahp }}, {{ $lichhoc->tuan }})">
+                                                                            <i class="fas fa-trash"></i><span
+                                                                                style="margin-left: 8px">Xem điểm
+                                                                                danh</span>
+                                                                        </a>
+                                                                    </div>
 
 
-                                                                <div @if (strtotime($lichhoc->ngay) > strtotime($ngay)) class='disableddiv' @endif
-                                                                    style="width:100%; display:flex; justify-content:center;">
-                                                                    <a class="btn btn-danger" href="#"
-                                                                        onclick="viewStudent({{ $user[0]->masv }}, {{ $lichhoc->mahp }}, {{ $lichhoc->tuan }})">
-                                                                        <i class="fas fa-trash"></i><span
-                                                                            style="margin-left: 8px">Xem điểm
-                                                                            danh</span>
-                                                                    </a>
                                                                 </div>
+                                                            @endif
+                                                        @endforeach
+                                                    </td>
+                                                    <td style="min-height: 150px;">
+                                                        @foreach ($data as $lichhoc)
+                                                            @if ($lichhoc->buoi == 1 && $lichhoc->thu == 8)
+                                                                <div style="width:100%; flex-direction: column;display: flex; min-height: 150px;justify-content: space-around;border-color:#1da1f2; background-color:#92d6ff;"
+                                                                    class="content text-left" data-bg="129872"
+                                                                    style="text-align: left">
+                                                                    <b><a href="javascript:" target=""
+                                                                            style="text-decoration: none; color: #003763; text-align:center; display:block;">{{ $lichhoc->mamh_id }}</a></b>
+
+                                                                    <p style="text-align:center;">
+                                                                        <span lang="lichtheotuan-tiet">Tiết:</span>
+                                                                        {{ $lichhoc->tietbd . ' - ' . $lichhoc->tietkt }}
+                                                                    </p>
+                                                                    <p lang="giang-duong" style="text-align:center;">
+                                                                        Phòng:
+                                                                        {{ $lichhoc->maphong_id }}
+                                                                    </p>
 
 
-                                                            </div>
-                                                        @endif
-                                                    @endforeach
-                                                </td>
-                                                <td>
-                                                    @foreach ($data as $lichhoc)
-                                                        @if ($lichhoc->buoi == 1 && $lichhoc->thu == 8)
-                                                            <div style="width:100%;" class="content text-left"
-                                                                data-bg="129872" style="text-align: left">
-                                                                <b><a href="javascript:" target=""
-                                                                        style="text-decoration: none; color: #003763; text-align:center; display:block;">{{ $lichhoc->mamh_id }}</a></b>
-
-                                                                <p style="text-align:center;">
-                                                                    <span lang="lichtheotuan-tiet">Tiết:</span>
-                                                                    {{ $lichhoc->tietbd . ' - ' . $lichhoc->tietkt }}
-                                                                </p>
-                                                                <p lang="giang-duong" style="text-align:center;">Phòng:
-                                                                    {{ $lichhoc->maphong_id }}
-                                                                </p>
+                                                                    <div @if (strtotime($lichhoc->ngay) > strtotime($ngay)) class='disableddiv' @endif
+                                                                        style="width:100%; display:flex; justify-content:center;">
+                                                                        <a class="btn btn-danger"
+                                                                            style="margin-right:0; border-radius: 5px !important;"
+                                                                            href="#"
+                                                                            onclick="viewStudent({{ $user[0]->masv }}, {{ $lichhoc->mahp }}, {{ $lichhoc->tuan }})">
+                                                                            <i class="fas fa-trash"></i><span
+                                                                                style="margin-left: 8px">Xem điểm
+                                                                                danh</span>
+                                                                        </a>
+                                                                    </div>
 
 
-                                                                <div @if (strtotime($lichhoc->ngay) > strtotime($ngay)) class='disableddiv' @endif
-                                                                    style="width:100%; display:flex; justify-content:center;">
-                                                                    <a class="btn btn-danger" href="#"
-                                                                        onclick="viewStudent({{ $user[0]->masv }}, {{ $lichhoc->mahp }}, {{ $lichhoc->tuan }})">
-                                                                        <i class="fas fa-trash"></i><span
-                                                                            style="margin-left: 8px">Xem điểm
-                                                                            danh</span>
-                                                                    </a>
                                                                 </div>
+                                                            @endif
+                                                        @endforeach
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td
+                                                        style="width:50px; font-weight: bold;vertical-align: middle;height: 150px;">
+                                                        Tối
+                                                    </td>
+                                                    <td style="min-height: 150px;">
+                                                        @foreach ($data as $lichhoc)
+                                                            @if ($lichhoc->buoi == 2 && $lichhoc->thu == 2)
+                                                                <div style="width:100%; flex-direction: column;display: flex; min-height: 150px;justify-content: space-around;border-color:#1da1f2; background-color:#92d6ff;"
+                                                                    class="content text-left" data-bg="129872"
+                                                                    style="text-align: left">
+                                                                    <b><a href="javascript:" target=""
+                                                                            style="text-decoration: none; color: #003763; text-align:center; display:block;">{{ $lichhoc->mamh_id }}</a></b>
+
+                                                                    <p style="text-align:center;">
+                                                                        <span lang="lichtheotuan-tiet">Tiết:</span>
+                                                                        {{ $lichhoc->tietbd . ' - ' . $lichhoc->tietkt }}
+                                                                    </p>
+                                                                    <p lang="giang-duong" style="text-align:center;">
+                                                                        Phòng:
+                                                                        {{ $lichhoc->maphong_id }}
+                                                                    </p>
 
 
-                                                            </div>
-                                                        @endif
-                                                    @endforeach
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td style="width:50px; font-weight: bold;vertical-align: middle;">Tối
-                                                </td>
-                                                <td>
-                                                    @foreach ($data as $lichhoc)
-                                                        @if ($lichhoc->buoi == 2 && $lichhoc->thu == 2)
-                                                            <div style="width:100%;" class="content text-left"
-                                                                data-bg="129872" style="text-align: left">
-                                                                <b><a href="javascript:" target=""
-                                                                        style="text-decoration: none; color: #003763; text-align:center; display:block;">{{ $lichhoc->mamh_id }}</a></b>
-
-                                                                <p style="text-align:center;">
-                                                                    <span lang="lichtheotuan-tiet">Tiết:</span>
-                                                                    {{ $lichhoc->tietbd . ' - ' . $lichhoc->tietkt }}
-                                                                </p>
-                                                                <p lang="giang-duong" style="text-align:center;">Phòng:
-                                                                    {{ $lichhoc->maphong_id }}
-                                                                </p>
+                                                                    <div @if (strtotime($lichhoc->ngay) > strtotime($ngay)) class='disableddiv' @endif
+                                                                        style="width:100%; display:flex; justify-content:center;">
+                                                                        <a class="btn btn-danger"
+                                                                            style="margin-right:0; border-radius: 5px !important;"
+                                                                            href="#"
+                                                                            onclick="viewStudent({{ $user[0]->masv }}, {{ $lichhoc->mahp }}, {{ $lichhoc->tuan }})">
+                                                                            <i class="fas fa-trash"></i><span
+                                                                                style="margin-left: 8px">Xem điểm
+                                                                                danh</span>
+                                                                        </a>
+                                                                    </div>
 
 
-                                                                <div @if (strtotime($lichhoc->ngay) > strtotime($ngay)) class='disableddiv' @endif
-                                                                    style="width:100%; display:flex; justify-content:center;">
-                                                                    <a class="btn btn-danger" href="#"
-                                                                        onclick="viewStudent({{ $user[0]->masv }}, {{ $lichhoc->mahp }}, {{ $lichhoc->tuan }})">
-                                                                        <i class="fas fa-trash"></i><span
-                                                                            style="margin-left: 8px">Xem điểm
-                                                                            danh</span>
-                                                                    </a>
                                                                 </div>
+                                                            @endif
+                                                        @endforeach
+                                                    </td>
+                                                    <td style="min-height: 150px;">
+                                                        @foreach ($data as $lichhoc)
+                                                            @if ($lichhoc->buoi == 2 && $lichhoc->thu == 3)
+                                                                <div style="width:100%; flex-direction: column;display: flex; min-height: 150px;justify-content: space-around;border-color:#1da1f2; background-color:#92d6ff;"
+                                                                    class="content text-left" data-bg="129872"
+                                                                    style="text-align: left">
+                                                                    <b><a href="javascript:" target=""
+                                                                            style="text-decoration: none; color: #003763; text-align:center; display:block;">{{ $lichhoc->mamh_id }}</a></b>
+
+                                                                    <p style="text-align:center;">
+                                                                        <span lang="lichtheotuan-tiet">Tiết:</span>
+                                                                        {{ $lichhoc->tietbd . ' - ' . $lichhoc->tietkt }}
+                                                                    </p>
+                                                                    <p lang="giang-duong" style="text-align:center;">
+                                                                        Phòng:
+                                                                        {{ $lichhoc->maphong_id }}
+                                                                    </p>
 
 
-                                                            </div>
-                                                        @endif
-                                                    @endforeach
-                                                </td>
-                                                <td>
-                                                    @foreach ($data as $lichhoc)
-                                                        @if ($lichhoc->buoi == 2 && $lichhoc->thu == 3)
-                                                            <div style="width:100%;" class="content text-left"
-                                                                data-bg="129872" style="text-align: left">
-                                                                <b><a href="javascript:" target=""
-                                                                        style="text-decoration: none; color: #003763; text-align:center; display:block;">{{ $lichhoc->mamh_id }}</a></b>
-
-                                                                <p style="text-align:center;">
-                                                                    <span lang="lichtheotuan-tiet">Tiết:</span>
-                                                                    {{ $lichhoc->tietbd . ' - ' . $lichhoc->tietkt }}
-                                                                </p>
-                                                                <p lang="giang-duong" style="text-align:center;">Phòng:
-                                                                    {{ $lichhoc->maphong_id }}
-                                                                </p>
+                                                                    <div @if (strtotime($lichhoc->ngay) > strtotime($ngay)) class='disableddiv' @endif
+                                                                        style="width:100%; display:flex; justify-content:center;">
+                                                                        <a class="btn btn-danger"
+                                                                            style="margin-right:0; border-radius: 5px !important;"
+                                                                            href="#"
+                                                                            onclick="viewStudent({{ $user[0]->masv }}, {{ $lichhoc->mahp }}, {{ $lichhoc->tuan }})">
+                                                                            <i class="fas fa-trash"></i><span
+                                                                                style="margin-left: 8px">Xem điểm
+                                                                                danh</span>
+                                                                        </a>
+                                                                    </div>
 
 
-                                                                <div @if (strtotime($lichhoc->ngay) > strtotime($ngay)) class='disableddiv' @endif
-                                                                    style="width:100%; display:flex; justify-content:center;">
-                                                                    <a class="btn btn-danger" href="#"
-                                                                        onclick="viewStudent({{ $user[0]->masv }}, {{ $lichhoc->mahp }}, {{ $lichhoc->tuan }})">
-                                                                        <i class="fas fa-trash"></i><span
-                                                                            style="margin-left: 8px">Xem điểm
-                                                                            danh</span>
-                                                                    </a>
                                                                 </div>
+                                                            @endif
+                                                        @endforeach
+                                                    </td>
+                                                    <td style="min-height: 150px;">
+                                                        @foreach ($data as $lichhoc)
+                                                            @if ($lichhoc->buoi == 2 && $lichhoc->thu == 4)
+                                                                <div style="width:100%; flex-direction: column;display: flex; min-height: 150px;justify-content: space-around;border-color:#1da1f2; background-color:#92d6ff;"
+                                                                    class="content text-left" data-bg="129872"
+                                                                    style="text-align: left">
+                                                                    <b><a href="javascript:" target=""
+                                                                            style="text-decoration: none; color: #003763; text-align:center; display:block;">{{ $lichhoc->mamh_id }}</a></b>
+
+                                                                    <p style="text-align:center;">
+                                                                        <span lang="lichtheotuan-tiet">Tiết:</span>
+                                                                        {{ $lichhoc->tietbd . ' - ' . $lichhoc->tietkt }}
+                                                                    </p>
+                                                                    <p lang="giang-duong" style="text-align:center;">
+                                                                        Phòng:
+                                                                        {{ $lichhoc->maphong_id }}
+                                                                    </p>
 
 
-                                                            </div>
-                                                        @endif
-                                                    @endforeach
-                                                </td>
-                                                <td>
-                                                    @foreach ($data as $lichhoc)
-                                                        @if ($lichhoc->buoi == 2 && $lichhoc->thu == 4)
-                                                            <div style="width:100%;" class="content text-left"
-                                                                data-bg="129872" style="text-align: left">
-                                                                <b><a href="javascript:" target=""
-                                                                        style="text-decoration: none; color: #003763; text-align:center; display:block;">{{ $lichhoc->mamh_id }}</a></b>
-
-                                                                <p style="text-align:center;">
-                                                                    <span lang="lichtheotuan-tiet">Tiết:</span>
-                                                                    {{ $lichhoc->tietbd . ' - ' . $lichhoc->tietkt }}
-                                                                </p>
-                                                                <p lang="giang-duong" style="text-align:center;">Phòng:
-                                                                    {{ $lichhoc->maphong_id }}
-                                                                </p>
+                                                                    <div @if (strtotime($lichhoc->ngay) > strtotime($ngay)) class='disableddiv' @endif
+                                                                        style="width:100%; display:flex; justify-content:center;">
+                                                                        <a class="btn btn-danger"
+                                                                            style="margin-right:0; border-radius: 5px !important;"
+                                                                            href="#"
+                                                                            onclick="viewStudent({{ $user[0]->masv }}, {{ $lichhoc->mahp }}, {{ $lichhoc->tuan }})">
+                                                                            <i class="fas fa-trash"></i><span
+                                                                                style="margin-left: 8px">Xem điểm
+                                                                                danh</span>
+                                                                        </a>
+                                                                    </div>
 
 
-                                                                <div @if (strtotime($lichhoc->ngay) > strtotime($ngay)) class='disableddiv' @endif
-                                                                    style="width:100%; display:flex; justify-content:center;">
-                                                                    <a class="btn btn-danger" href="#"
-                                                                        onclick="viewStudent({{ $user[0]->masv }}, {{ $lichhoc->mahp }}, {{ $lichhoc->tuan }})">
-                                                                        <i class="fas fa-trash"></i><span
-                                                                            style="margin-left: 8px">Xem điểm
-                                                                            danh</span>
-                                                                    </a>
                                                                 </div>
+                                                            @endif
+                                                        @endforeach
+                                                    </td>
+                                                    <td style="min-height: 150px;">
+                                                        @foreach ($data as $lichhoc)
+                                                            @if ($lichhoc->buoi == 2 && $lichhoc->thu == 5)
+                                                                <div style="width:100%; flex-direction: column;display: flex; min-height: 150px;justify-content: space-around;border-color:#1da1f2; background-color:#92d6ff;"
+                                                                    class="content text-left" data-bg="129872"
+                                                                    style="text-align: left">
+                                                                    <b><a href="javascript:" target=""
+                                                                            style="text-decoration: none; color: #003763; text-align:center; display:block;">{{ $lichhoc->mamh_id }}</a></b>
+
+                                                                    <p style="text-align:center;">
+                                                                        <span lang="lichtheotuan-tiet">Tiết:</span>
+                                                                        {{ $lichhoc->tietbd . ' - ' . $lichhoc->tietkt }}
+                                                                    </p>
+                                                                    <p lang="giang-duong" style="text-align:center;">
+                                                                        Phòng:
+                                                                        {{ $lichhoc->maphong_id }}
+                                                                    </p>
 
 
-                                                            </div>
-                                                        @endif
-                                                    @endforeach
-                                                </td>
-                                                <td>
-                                                    @foreach ($data as $lichhoc)
-                                                        @if ($lichhoc->buoi == 2 && $lichhoc->thu == 5)
-                                                            <div style="width:100%;" class="content text-left"
-                                                                data-bg="129872" style="text-align: left">
-                                                                <b><a href="javascript:" target=""
-                                                                        style="text-decoration: none; color: #003763; text-align:center; display:block;">{{ $lichhoc->mamh_id }}</a></b>
-
-                                                                <p style="text-align:center;">
-                                                                    <span lang="lichtheotuan-tiet">Tiết:</span>
-                                                                    {{ $lichhoc->tietbd . ' - ' . $lichhoc->tietkt }}
-                                                                </p>
-                                                                <p lang="giang-duong" style="text-align:center;">Phòng:
-                                                                    {{ $lichhoc->maphong_id }}
-                                                                </p>
+                                                                    <div @if (strtotime($lichhoc->ngay) > strtotime($ngay)) class='disableddiv' @endif
+                                                                        style="width:100%; display:flex; justify-content:center;">
+                                                                        <a class="btn btn-danger"
+                                                                            style="margin-right:0; border-radius: 5px !important;"
+                                                                            href="#"
+                                                                            onclick="viewStudent({{ $user[0]->masv }}, {{ $lichhoc->mahp }}, {{ $lichhoc->tuan }})">
+                                                                            <i class="fas fa-trash"></i><span
+                                                                                style="margin-left: 8px">Xem điểm
+                                                                                danh</span>
+                                                                        </a>
+                                                                    </div>
 
 
-                                                                <div @if (strtotime($lichhoc->ngay) > strtotime($ngay)) class='disableddiv' @endif
-                                                                    style="width:100%; display:flex; justify-content:center;">
-                                                                    <a class="btn btn-danger" href="#"
-                                                                        onclick="viewStudent({{ $user[0]->masv }}, {{ $lichhoc->mahp }}, {{ $lichhoc->tuan }})">
-                                                                        <i class="fas fa-trash"></i><span
-                                                                            style="margin-left: 8px">Xem điểm
-                                                                            danh</span>
-                                                                    </a>
                                                                 </div>
+                                                            @endif
+                                                        @endforeach
+                                                    </td>
+                                                    <td style="min-height: 150px;">
+                                                        @foreach ($data as $lichhoc)
+                                                            @if ($lichhoc->buoi == 2 && $lichhoc->thu == 6)
+                                                                <div style="width:100%; flex-direction: column;display: flex; min-height: 150px;justify-content: space-around;border-color:#1da1f2; background-color:#92d6ff;"
+                                                                    class="content text-left" data-bg="129872"
+                                                                    style="text-align: left">
+                                                                    <b><a href="javascript:" target=""
+                                                                            style="text-decoration: none; color: #003763; text-align:center; display:block;">{{ $lichhoc->mamh_id }}</a></b>
+
+                                                                    <p style="text-align:center;">
+                                                                        <span lang="lichtheotuan-tiet">Tiết:</span>
+                                                                        {{ $lichhoc->tietbd . ' - ' . $lichhoc->tietkt }}
+                                                                    </p>
+                                                                    <p lang="giang-duong" style="text-align:center;">
+                                                                        Phòng:
+                                                                        {{ $lichhoc->maphong_id }}
+                                                                    </p>
 
 
-                                                            </div>
-                                                        @endif
-                                                    @endforeach
-                                                </td>
-                                                <td>
-                                                    @foreach ($data as $lichhoc)
-                                                        @if ($lichhoc->buoi == 2 && $lichhoc->thu == 6)
-                                                            <div style="width:100%;" class="content text-left"
-                                                                data-bg="129872" style="text-align: left">
-                                                                <b><a href="javascript:" target=""
-                                                                        style="text-decoration: none; color: #003763; text-align:center; display:block;">{{ $lichhoc->mamh_id }}</a></b>
-
-                                                                <p style="text-align:center;">
-                                                                    <span lang="lichtheotuan-tiet">Tiết:</span>
-                                                                    {{ $lichhoc->tietbd . ' - ' . $lichhoc->tietkt }}
-                                                                </p>
-                                                                <p lang="giang-duong" style="text-align:center;">Phòng:
-                                                                    {{ $lichhoc->maphong_id }}
-                                                                </p>
+                                                                    <div @if (strtotime($lichhoc->ngay) > strtotime($ngay)) class='disableddiv' @endif
+                                                                        style="width:100%; display:flex; justify-content:center;">
+                                                                        <a class="btn btn-danger"
+                                                                            style="margin-right:0; border-radius: 5px !important;"
+                                                                            href="#"
+                                                                            onclick="viewStudent({{ $user[0]->masv }}, {{ $lichhoc->mahp }}, {{ $lichhoc->tuan }})">
+                                                                            <i class="fas fa-trash"></i><span
+                                                                                style="margin-left: 8px">Xem điểm
+                                                                                danh</span>
+                                                                        </a>
+                                                                    </div>
 
 
-                                                                <div @if (strtotime($lichhoc->ngay) > strtotime($ngay)) class='disableddiv' @endif
-                                                                    style="width:100%; display:flex; justify-content:center;">
-                                                                    <a class="btn btn-danger" href="#"
-                                                                        onclick="viewStudent({{ $user[0]->masv }}, {{ $lichhoc->mahp }}, {{ $lichhoc->tuan }})">
-                                                                        <i class="fas fa-trash"></i><span
-                                                                            style="margin-left: 8px">Xem điểm
-                                                                            danh</span>
-                                                                    </a>
                                                                 </div>
+                                                            @endif
+                                                        @endforeach
+                                                    </td>
+                                                    <td style="min-height: 150px;">
+                                                        @foreach ($data as $lichhoc)
+                                                            @if ($lichhoc->buoi == 2 && $lichhoc->thu == 7)
+                                                                <div style="width:100%; flex-direction: column;display: flex; min-height: 150px;justify-content: space-around;border-color:#1da1f2; background-color:#92d6ff;"
+                                                                    class="content text-left" data-bg="129872"
+                                                                    style="text-align: left">
+                                                                    <b><a href="javascript:" target=""
+                                                                            style="text-decoration: none; color: #003763; text-align:center; display:block;">{{ $lichhoc->mamh_id }}</a></b>
+
+                                                                    <p style="text-align:center;">
+                                                                        <span lang="lichtheotuan-tiet">Tiết:</span>
+                                                                        {{ $lichhoc->tietbd . ' - ' . $lichhoc->tietkt }}
+                                                                    </p>
+                                                                    <p lang="giang-duong" style="text-align:center;">
+                                                                        Phòng:
+                                                                        {{ $lichhoc->maphong_id }}
+                                                                    </p>
 
 
-                                                            </div>
-                                                        @endif
-                                                    @endforeach
-                                                </td>
-                                                <td>
-                                                    @foreach ($data as $lichhoc)
-                                                        @if ($lichhoc->buoi == 2 && $lichhoc->thu == 7)
-                                                            <div style="width:100%;" class="content text-left"
-                                                                data-bg="129872" style="text-align: left">
-                                                                <b><a href="javascript:" target=""
-                                                                        style="text-decoration: none; color: #003763; text-align:center; display:block;">{{ $lichhoc->mamh_id }}</a></b>
-
-                                                                <p style="text-align:center;">
-                                                                    <span lang="lichtheotuan-tiet">Tiết:</span>
-                                                                    {{ $lichhoc->tietbd . ' - ' . $lichhoc->tietkt }}
-                                                                </p>
-                                                                <p lang="giang-duong" style="text-align:center;">Phòng:
-                                                                    {{ $lichhoc->maphong_id }}
-                                                                </p>
+                                                                    <div @if (strtotime($lichhoc->ngay) > strtotime($ngay)) class='disableddiv' @endif
+                                                                        style="width:100%; display:flex; justify-content:center;">
+                                                                        <a class="btn btn-danger"
+                                                                            style="margin-right:0; border-radius: 5px !important;"
+                                                                            href="#"
+                                                                            onclick="viewStudent({{ $user[0]->masv }}, {{ $lichhoc->mahp }}, {{ $lichhoc->tuan }})">
+                                                                            <i class="fas fa-trash"></i><span
+                                                                                style="margin-left: 8px">Xem điểm
+                                                                                danh</span>
+                                                                        </a>
+                                                                    </div>
 
 
-                                                                <div @if (strtotime($lichhoc->ngay) > strtotime($ngay)) class='disableddiv' @endif
-                                                                    style="width:100%; display:flex; justify-content:center;">
-                                                                    <a class="btn btn-danger" href="#"
-                                                                        onclick="viewStudent({{ $user[0]->masv }}, {{ $lichhoc->mahp }}, {{ $lichhoc->tuan }})">
-                                                                        <i class="fas fa-trash"></i><span
-                                                                            style="margin-left: 8px">Xem điểm
-                                                                            danh</span>
-                                                                    </a>
                                                                 </div>
+                                                            @endif
+                                                        @endforeach
+                                                    </td>
+                                                    <td style="min-height: 150px;">
+                                                        @foreach ($data as $lichhoc)
+                                                            @if ($lichhoc->buoi == 2 && $lichhoc->thu == 8)
+                                                                <div style="width:100%; flex-direction: column;display: flex; min-height: 150px;justify-content: space-around;border-color:#1da1f2; background-color:#92d6ff;"
+                                                                    class="content text-left" data-bg="129872"
+                                                                    style="text-align: left">
+                                                                    <b><a href="javascript:" target=""
+                                                                            style="text-decoration: none; color: #003763; text-align:center; display:block;">{{ $lichhoc->mamh_id }}</a></b>
+
+                                                                    <p style="text-align:center;">
+                                                                        <span lang="lichtheotuan-tiet">Tiết:</span>
+                                                                        {{ $lichhoc->tietbd . ' - ' . $lichhoc->tietkt }}
+                                                                    </p>
+                                                                    <p lang="giang-duong" style="text-align:center;">
+                                                                        Phòng:
+                                                                        {{ $lichhoc->maphong_id }}
+                                                                    </p>
 
 
-                                                            </div>
-                                                        @endif
-                                                    @endforeach
-                                                </td>
-                                                <td>
-                                                    @foreach ($data as $lichhoc)
-                                                        @if ($lichhoc->buoi == 2 && $lichhoc->thu == 8)
-                                                            <div style="width:100%;" class="content text-left"
-                                                                data-bg="129872" style="text-align: left">
-                                                                <b><a href="javascript:" target=""
-                                                                        style="text-decoration: none; color: #003763; text-align:center; display:block;">{{ $lichhoc->mamh_id }}</a></b>
-
-                                                                <p style="text-align:center;">
-                                                                    <span lang="lichtheotuan-tiet">Tiết:</span>
-                                                                    {{ $lichhoc->tietbd . ' - ' . $lichhoc->tietkt }}
-                                                                </p>
-                                                                <p lang="giang-duong" style="text-align:center;">Phòng:
-                                                                    {{ $lichhoc->maphong_id }}
-                                                                </p>
+                                                                    <div @if (strtotime($lichhoc->ngay) > strtotime($ngay)) class='disableddiv' @endif
+                                                                        style="width:100%; display:flex; justify-content:center;">
+                                                                        <a class="btn btn-danger"
+                                                                            style="margin-right:0; border-radius: 5px !important;"
+                                                                            href="#"
+                                                                            onclick="viewStudent({{ $user[0]->masv }}, {{ $lichhoc->mahp }}, {{ $lichhoc->tuan }})">
+                                                                            <i class="fas fa-trash"></i><span
+                                                                                style="margin-left: 8px">Xem điểm
+                                                                                danh</span>
+                                                                        </a>
+                                                                    </div>
 
 
-                                                                <div @if (strtotime($lichhoc->ngay) > strtotime($ngay)) class='disableddiv' @endif
-                                                                    style="width:100%; display:flex; justify-content:center;">
-                                                                    <a class="btn btn-danger" href="#"
-                                                                        onclick="viewStudent({{ $user[0]->masv }}, {{ $lichhoc->mahp }}, {{ $lichhoc->tuan }})">
-                                                                        <i class="fas fa-trash"></i><span
-                                                                            style="margin-left: 8px">Xem điểm
-                                                                            danh</span>
-                                                                    </a>
                                                                 </div>
+                                                            @endif
+                                                        @endforeach
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <!-- End lịch ở đây -->
+                                    </div>
 
-
-                                                            </div>
-                                                        @endif
-                                                    @endforeach
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                    <!-- End lịch ở đây -->
                                 </div>
                             </div>
                         </div>
@@ -1090,6 +1113,7 @@
             </div>
         </div>
     </div>
+
     <script type="text/javascript" src="/template/teacher/Assets/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/template/teacher/Assets/js/jquery.nicescroll.min.js"></script>
     <script src="/template/teacher/Assets/js/tooltipster.bundle.min.js"></script>

@@ -1,7 +1,8 @@
 @extends('admin.main2')
 @section('content')
     <div class="container">
-        <a href="#" class="btn btn-success btn-add" data-target="#modal-add" data-toggle="modal">Add</a>
+        <a href="#" class="btn btn-success btn-add" style="margin:8px;" data-target="#modal-add" data-toggle="modal">Thêm lớp
+            học</a>
         <div class="table-responsive">
             <table class="table table-hover">
                 <thead>
@@ -9,6 +10,7 @@
                         <th>Mã Lớp</th>
                         <th>Tên Lớp</th>
                         <th>Tên Khoa</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -19,10 +21,9 @@
                             <td id="tenkhoa-{{ $class->malop }}">{{ $class->tenkhoa }}</td>
                             <td>
                                 <button data-url="{{ route('class.edit', $class->malop) }}" ​ type="button"
-                                    data-target="#edit" data-toggle="modal" class="btn btn-warning btn-edit">Edit</button>
+                                    data-target="#edit" data-toggle="modal" class="btn btn-warning btn-edit">Sửa</button>
                                 <button data-url="{{ route('class.destroy', $class->malop) }}" ​ type="button"
-                                    data-target="#delete" data-toggle="modal"
-                                    class="btn btn-danger btn-delete">Delete</button>
+                                    data-target="#delete" data-toggle="modal" class="btn btn-danger btn-delete">Xóa</button>
                             </td>
                         </tr>
                     @endforeach
@@ -44,12 +45,14 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="name">Mã lớp</label>
-                            <input type="text" name="malop" class="form-control" id="malop-add" placeholder="Nhập mã lớp">
+                            <input required type="text" name="malop" class="form-control" id="malop-add"
+                                placeholder="Nhập mã lớp">
                         </div>
 
                         <div class="form-group">
                             <label for="description">Tên lớp</label>
-                            <textarea class="form-control" name="tenlop" id="tenlop-add" cols="10" rows="10"></textarea>
+                            <textarea required class="form-control" name="tenlop" id="tenlop-add" cols="10"
+                                rows="10"></textarea>
                         </div>
                         <div class="form-group">
                             <label for="">Tên khoa</label>
@@ -64,8 +67,8 @@
                         @csrf
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Add</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-primary">Thêm</button>
                     </div>
                 </form>
             </div>
@@ -84,13 +87,14 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="name">Mã Lớp</label>
-                            <input type="text" name="malop" class="form-control" id="malop-edit"
+                            <input readonly type="text" name="malop" class="form-control" id="malop-edit"
                                 placeholder="Nhập mã lớp">
                         </div>
 
                         <div class="form-group">
                             <label for="description">Tên lớp</label>
-                            <textarea class="form-control" name="tenlop" id="tenlop-edit" cols="10" rows="10"></textarea>
+                            <textarea required class="form-control" name="tenlop" id="tenlop-edit" cols="10"
+                                rows="10"></textarea>
                         </div>
 
                         <div class="form-group">
@@ -105,8 +109,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Edit</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-primary">Cập nhật</button>
                     </div>
                 </form>
             </div>
@@ -157,11 +161,11 @@
                             '</td>' +
                             '<td><button data-url="/admin/class/edit/' + response.data
                             .malop + '" type="button" ' +
-                            'data-target="#edit" data-toggle="modal" class="btn btn-warning btn-edit">Edit</button>' +
+                            'data-target="#edit" data-toggle="modal" class="btn btn-warning btn-edit">Sửa</button>' +
                             '<button data-url="/admin/class/destroy/' + response.data
                             .malop +
                             '"​ type="button" style="margin-left: 5px;" data-target="#delete" ' +
-                            ' data-toggle="modal"class="btn btn-danger btn-delete">Delete</button></td>'
+                            ' data-toggle="modal"class="btn btn-danger btn-delete">Xóa</button></td>'
                         );
                     },
                     error: function(jqXHR, textStatus, errorThrown) {

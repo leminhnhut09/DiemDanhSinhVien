@@ -40,6 +40,7 @@ function getDateSchedule($dates, $mahp, $tuan)
         gtag('js', new Date());
         gtag('config', 'UA-184858033-7');
     </script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 
 <body>
@@ -76,12 +77,12 @@ function getDateSchedule($dates, $mahp, $tuan)
                         </a>
                     </div>
 
-                    <div class="search-bar">
+                    {{-- <div class="search-bar">
                         <form action="#">
                             <input type="text" id="k" name="k" placeholder="Tìm kiếm..." required>
                             <button type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
                         </form>
-                    </div>
+                    </div> --}}
 
                     <div class="menu-btn">
                         <a href="#" title=""><i class="fa fa-bars"></i></a>
@@ -99,9 +100,7 @@ function getDateSchedule($dates, $mahp, $tuan)
                         </div>
                         <div class="user-account-info dropdown-menu pull-right">
                             <ul class="us-links">
-                                <li><a href="#" title="">Thông tin cá nhân</a></li>
-                                <li><a title="" onclick="popupDoiMatKhau()">Đổi mật khẩu</a></li>
-                                <li><a href="#" title="">Đăng xuất</a></li>
+                                <li><a href="/logout" title="">Đăng xuất</a></li>
                             </ul>
                         </div>
                     </div>
@@ -115,14 +114,14 @@ function getDateSchedule($dates, $mahp, $tuan)
                                 </a>
                             </li>
 
-                            <li>
+                            {{-- <li>
                                 <a id="spanBell" href="#" title="">
                                     <div id="tinTuc" lang="tin-tuc">
                                         <i class="fa fa-bell-o" aria-hidden="true"></i>&nbsp&nbspTin
                                         tức
                                     </div>
                                 </a>
-                            </li>
+                            </li> --}}
                             <!-- Animation notify -->
                             <script>
                                 CheckNews();
@@ -143,7 +142,7 @@ function getDateSchedule($dates, $mahp, $tuan)
             </div>
         </header>
         <!--End header -->
-
+        <input id="id-user" type="text" value="{{ $data[0]->masv }}" style="display: none" />
         <input id="WarningKSMode" name="WarningKSMode" type="hidden" value="0" />
         <style>
             .soluong {
@@ -366,17 +365,44 @@ function getDateSchedule($dates, $mahp, $tuan)
                         </div>
                     </div>
                     <!-- List column methods -->
+                    {{-- Filter --}}
+                    <div style="display: flex; justify-content: space-evenly">
+                        <div class="form-group"
+                            style="width:30%; display: flex; align-items: center; justify-content: center; margin-top: 17px; margin-bottom:25px;">
+                            <label style="width:auto; margin-right: 10px " for="">Năm học</label>
+                            <select style="width:200px;" name="namhoc" id="namhoc-filter" class="form-control"
+                                required="required">
+                                <option value="All">Tất cả</option>
+                                @foreach ($years as $year) {
+                                    <option value="{{ $year->namhoc }}">{{ $year->namhoc }}</option>
+                                    }
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group"
+                            style="width:30%; display: flex; align-items: center; justify-content: center; margin-top: 17px; margin-bottom:25px;">
+                            <label style="width:auto; margin-right: 10px" for="">Học kỳ</label>
+                            <select style="width:140px;" name="hocky" id="hocky-filter" class="form-control"
+                                required="required">
+                                <option value="All">Tất cả</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                            </select>
+                        </div>
+                    </div>
                     <div style="width:100%; min-height:auto; min-width: auto; overflow-x:auto; max-height: 500px"
                         class="tables-croll">
-                        <!-- Lịch ở đây -->
+                        <!-- Danh sách điểm danh -->
                         <table style="text-align:center;" class="table table-striped table-bordered table-hover"
                             width="100%" role="grid">
-                            <thead>
+                            <thead class="bg-info">
                                 <tr style="width:100%;">
                                     <th style="min-width: 120px; text-align:center;">Lớp học phần</th>
                                     <th style="min-width: 150px; max-width: 200px;  text-align:center;">Tên học phần
                                     </th>
                                     <th style="min-width: 150px;  text-align:center;">Tên giảng viên</th>
+                                    <th style="min-width: 150px;  text-align:center;">Năm học</th>
+                                    <th style="min-width: 150px;  text-align:center;">Học kỳ</th>
                                     <th style="min-width: 120px; text-align:center;">Tuần 1</th>
                                     <th style="min-width: 120px; text-align:center;">Tuần 2</th>
                                     <th style="min-width: 120px; text-align:center;">Tuần 3</th>
@@ -399,7 +425,7 @@ function getDateSchedule($dates, $mahp, $tuan)
                                     <th style="min-width: 120px; text-align:center;">Tuần 20</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="table-body">
                                 @foreach ($subjects as $subject)
                                     <tr>
                                         <td style="vertical-align: middle;"
@@ -407,6 +433,8 @@ function getDateSchedule($dates, $mahp, $tuan)
                                             {{ $subject->mahp_id }}</td>
                                         <td style="vertical-align: middle;">{{ $subject->tenmh }}</td>
                                         <td style="vertical-align: middle;">{{ $subject->tengv }}</td>
+                                        <td style="vertical-align: middle;">{{ $subject->namhoc_id }}</td>
+                                        <td style="vertical-align: middle;">{{ $subject->hocky_id }}</td>
                                         <td title="<?php getDateSchedule($dates, $subject->mahp_id, '1'); ?>">
                                             <img style="display: inline-block; width:24px; height:100%; vertical-align: middle;"
                                                 src="{{ $subject->tuan1 == 'true' ? '/icons/check.png' : ($subject->tuan1 == 'false' ? '/icons/nocheck.png' : '/icons/null.png') }}"
@@ -491,6 +519,7 @@ function getDateSchedule($dates, $mahp, $tuan)
                                     </tr>
                                 @endforeach
                             </tbody>
+                            @csrf
                         </table>
                         <!-- End lịch ở đây -->
                     </div>
@@ -500,7 +529,65 @@ function getDateSchedule($dates, $mahp, $tuan)
                 </div>
             </div>
         </div>
+        <script type="text/javascript" charset="utf-8">
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+        </script>
         <script>
+            function checkState(base) {
+                var state = '';
+                if (base == 'true')
+                    state = '/icons/check.png';
+                else if (base == 'false')
+                    state = '/icons/nocheck.png';
+                else
+                    state = '/icons/null.png';
+                return `<img style="display: inline-block; width:24px; height:100%; vertical-align: middle;" src="${state}" alt="">`
+            }
+            $(document).ready(function() {
+                function buildTable(data) {
+                    var table = document.getElementById('table-body')
+                    table.innerHTML = ''
+                    for (var i = 0; i < data.length; i++) {
+
+                        row =
+                            `<tr><td style="vertical-align: middle;"title="Năm học: ${data[i].namhoc_id}, Học kỳ: ${data[i].hocky_id}, Loại: ${data[i].loai}">${data[i].mahp_id}</td>` +
+                            `<td style="vertical-align: middle;">${data[i].tenmh}</td><td style="vertical-align: middle;">${data[i].tengv}</td><td style="vertical-align: middle;">${data[i].namhoc_id}</td>` +
+                            `<td style="vertical-align: middle;">${data[i].hocky_id}</td><td>${checkState(data[i].tuan1)}</td><td>${checkState(data[i].tuan2)}</td><td>${checkState(data[i].tuan3)}</td>` +
+                            `<td>${checkState(data[i].tuan4)}</td><td>${checkState(data[i].tuan5)}</td><td>${checkState(data[i].tuan6)}</td><td>${checkState(data[i].tuan7)}</td><td>${checkState(data[i].tuan8)}</td>` +
+                            `<td>${checkState(data[i].tuan9)}</td><td>${checkState(data[i].tuan10)}</td><td>${checkState(data[i].tuan11)}</td><td>${checkState(data[i].tuan12)}</td><td>${checkState(data[i].tuan13)}</td>` +
+                            `<td>${checkState(data[i].tuan14)}</td><td>${checkState(data[i].tuan15)}</td><td>${checkState(data[i].tuan16)}</td><td>${checkState(data[i].tuan17)}</td><td>${checkState(data[i].tuan18)}</td>` +
+                            `<td>${checkState(data[i].tuan19)}</td><td>${checkState(data[i].tuan20)}</td></tr>`
+                        table.innerHTML += row
+                    }
+                }
+
+                $(document).on('change', '#makhoa-filter, #namhoc-filter, #hocky-filter', function(e) {
+                    e.preventDefault();
+                    $.ajax({
+                        type: 'put',
+                        url: '/student/filter',
+                        data: {
+                            user: $('#id-user').val(),
+                            namhoc: $('#namhoc-filter').val(),
+                            hocky: $('#hocky-filter').val()
+                        },
+                        success: function(response) {
+                            console.log(response.data);
+
+                            buildTable(response.data);
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            //xử lý lỗi tại đây
+                        }
+                    })
+
+                })
+            });
+
             $('#cboIDDotThongKeKQHT').on('change', function() {
                 $('#box-dashboard-thongke-ketquahoctap-theodot').html("");
                 $.ajax({

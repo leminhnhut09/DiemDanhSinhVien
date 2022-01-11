@@ -21,7 +21,7 @@ class CreateCahocGiangvienMonhocTable extends Migration
             $table->tinyInteger('thu');
             $table->tinyInteger('buoi');
             $table->string('maphong_id', 10);
-            $table->primary(['mahp_id', 'macahoc_id', 'tuan']);
+            $table->primary(['mahp_id', 'tuan']);
             $table->foreign('maphong_id')->references('maphong')->on('phonghocs');
             $table->foreign('mahp_id')->references('mahp')->on('giangvien_monhoc');
             $table->foreign('macahoc_id')->references('macahoc')->on('cahocs');

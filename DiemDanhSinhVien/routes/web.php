@@ -15,16 +15,19 @@ use App\Http\Controllers\Admin\SemesterController;
 use App\Http\Controllers\Admin\StudentMController;
 use App\Http\Controllers\Admin\SubjectsController;
 use App\Http\Controllers\Admin\TeacherMController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Student\StudentController;
 use App\Http\Controllers\Teacher\TeacherController;
 
 
 Route::get('/login', [LoginController::class, 'index'])->name('login');
+Route::get('/logout', [LoginController::class, 'flush'])->name('logout');
 Route::post('/login/store', [LoginController::class, 'store']);
 Route::middleware(['auth'])->group(function () {
     Route::prefix('admin')->group(function () {
         Route::get('/', [HomeController::class, 'index'])->name('admin.home');
         Route::post('upload/services', [UploadController::class, 'store']);
+
         // Khoa
         Route::prefix('facultys')->group(function () {
             Route::post('add', [FacultysController::class, 'store'])->name('facultys.store');
@@ -97,6 +100,9 @@ Route::middleware(['auth'])->group(function () {
             Route::put('edit/{mahp}', [TermController::class, 'update'])->name('term.update');
             Route::delete('destroy/{mahp}', [TermController::class, 'destroy'])->name('term.destroy');
             Route::get('semester/{namhoc}', [TermController::class, 'getsemester'])->name('term.getSemester');
+
+            Route::post('addXLSX', [TermController::class, 'storeXLSX'])->name('term.storeXLSX');
+            Route::put('filter', [TermController::class, 'getFilter']);
         });
         // Lịch
         Route::prefix('schedule')->group(function () {
@@ -105,6 +111,8 @@ Route::middleware(['auth'])->group(function () {
             Route::get('edit/{mahp_id}/{tuan}', [ScheduleController::class, 'show'])->name('schedule.edit');
             Route::put('edit/{mahp_id}/{tuan}', [ScheduleController::class, 'update'])->name('schedule.update');
             Route::delete('destroy/{mahp_id}/{tuan}', [ScheduleController::class, 'destroy'])->name('schedule.destroy');
+
+            Route::put('filter', [ScheduleController::class, 'getFilter']);
         });
         // Điểm danh
         Route::prefix('attendance')->group(function () {
@@ -113,17 +121,30 @@ Route::middleware(['auth'])->group(function () {
             Route::get('edit/{mahp}/{masv}', [AttendanceController::class, 'show'])->name('attendance.edit');
             Route::put('edit/{mahp}/{masv}', [AttendanceController::class, 'update'])->name('attendance.update');
             Route::delete('destroy/{mahp}/{masv}', [AttendanceController::class, 'destroy'])->name('attendance.destroy');
+
+            Route::post('addXLSX', [AttendanceController::class, 'storeXLSX'])->name('attendanceXLSX.store');
+            Route::put('filter', [AttendanceController::class, 'getFilter']);
+            Route::put('namhoc', [AttendanceController::class, 'getYear'])->name('attendance.namhoc');
+            Route::put('hocky', [AttendanceController::class, 'getSemester']);
+            Route::put('khoa', [AttendanceController::class, 'getFacultys']);
         });
     });
     Route::prefix('student')->group(function () {
         Route::get('/', [StudentController::class, 'index'])->name('student.index');
         Route::post('/', [StudentController::class, 'show']);
         Route::get('/schedule', [StudentController::class, 'store'])->name('student.store');
+
+        Route::post('/schedule/update', [StudentController::class, 'getschedule'])->name('student.getschedule');
+        Route::put('filter', [StudentController::class, 'getFilter']);
     });
     Route::prefix('teacher')->group(function () {
         Route::get('/', [TeacherController::class, 'index'])->name('teacher.index');
         Route::get('/schedule', [TeacherController::class, 'store'])->name('teacher.store');
         Route::get('/attendance/{mahp}', [TeacherController::class, 'create'])->name('teacher.attendance');
         Route::post('/attendance', [TeacherController::class, 'update'])->name('teacher.update');
+
+        Route::get('statistical', [TeacherController::class, 'indexTeacher'])->name('teacher.statistical.list');
+        Route::put('filter', [TeacherController::class, 'getFilter']);
+        Route::post('/schedule/update', [TeacherController::class, 'getschedule'])->name('teacher.getschedule');
     });
 });

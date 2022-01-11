@@ -23,24 +23,15 @@ class ClassService
     // }
     public function store($request)
     {
-        //dd($request->all());
-        // $isValidPrice = $this->isValidPrice($request);
-        //if ($isValidPrice == false) return false;
-
         try {
-            DB::table('sinhviens')->insert([
-                'masv' => $request->input('masv'),
-                'tensv' => $request->input('tensv'),
-                'gioitinh' => $request->input('gioitinh'),
-                'ngaysinh' => $request->input('ngaysinh'),
-                'diachi' => $request->input('diachi'),
-                'sdt' => $request->input('sdt'),
-                'anh' => $request->input('anh'),
-                'malop_id' => $request->input('malop_id'),
+            DB::table('lops')->insert([
+                'malop' => $request->input('malop'),
+                'tenlop' => $request->input('tenlop'),
+                'makhoa_id' => $request->input('makhoa')
             ]);
-            return DB::table('sinhviens')
-                ->where('masv', $request->input('masv'))
-                ->join('lops', 'lops.malop', 'sinhviens.malop_id')
+            return DB::table('lops')
+                ->where('malop', $request->input('malop'))
+                ->join('khoas', 'khoas.makhoa', 'lops.makhoa_id')
                 ->get()[0];
         } catch (\Exception $err) {
             Log::info($err->getMessage());

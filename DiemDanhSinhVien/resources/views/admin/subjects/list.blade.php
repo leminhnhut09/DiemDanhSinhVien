@@ -1,7 +1,8 @@
 @extends('admin.main2')
 @section('content')
     <div class="container">
-        <a href="#" class="btn btn-success btn-add" data-target="#modal-add" data-toggle="modal">Add</a>
+        <a href="#" class="btn btn-success btn-add" data-target="#modal-add" style="margin:8px;" data-toggle="modal">Thêm môn
+            học</a>
         <div class="table-responsive">
             <table class="table table-hover">
                 <thead>
@@ -25,10 +26,9 @@
                             <td id="tenkhoa-{{ $subject->mamh }}">{{ $subject->tenkhoa }}</td>
                             <td>
                                 <button data-url="{{ route('subjects.edit', $subject->mamh) }}" ​ type="button"
-                                    data-target="#edit" data-toggle="modal" class="btn btn-warning btn-edit">Edit</button>
+                                    data-target="#edit" data-toggle="modal" class="btn btn-warning btn-edit">Sửa</button>
                                 <button data-url="{{ route('subjects.destroy', $subject->mamh) }}" ​ type="button"
-                                    data-target="#delete" data-toggle="modal"
-                                    class="btn btn-danger btn-delete">Delete</button>
+                                    data-target="#delete" data-toggle="modal" class="btn btn-danger btn-delete">Xóa</button>
                             </td>
                         </tr>
                     @endforeach
@@ -50,19 +50,19 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="name">Mã môn học</label>
-                            <input type="text" name="mamh" class="form-control" id="mamh-add"
+                            <input required type="text" name="mamh" class="form-control" id="mamh-add"
                                 placeholder="Nhập mã môn học">
                         </div>
 
                         <div class="form-group">
                             <label for="description">Tên môn học</label>
-                            <input type="text" name="tenmh" class="form-control" id="tenmh-add"
+                            <input required type="text" name="tenmh" class="form-control" id="tenmh-add"
                                 placeholder="Nhập tên môn học">
                         </div>
 
                         <div class="form-group">
                             <label for="">Ghi chú</label>
-                            <input type="text" name="ghichu" class="form-control" id="ghichu-add"
+                            <input required type="text" name="ghichu" class="form-control" id="ghichu-add"
                                 placeholder="Nhập ghi chú">
                         </div>
 
@@ -95,8 +95,8 @@
                         @csrf
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Add</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-primary">Thêm</button>
                     </div>
                 </form>
             </div>
@@ -115,19 +115,19 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="name">Mã môn học</label>
-                            <input type="text" name="mamh" class="form-control" id="mamh-edit"
+                            <input readonly type="text" name="mamh" class="form-control" id="mamh-edit"
                                 placeholder="Nhập mã môn học">
                         </div>
 
                         <div class="form-group">
                             <label for="description">Tên môn học</label>
-                            <input type="text" name="tenmh" class="form-control" id="tenmh-edit"
+                            <input required type="text" name="tenmh" class="form-control" id="tenmh-edit"
                                 placeholder="Nhập tên môn học">
                         </div>
 
                         <div class="form-group">
                             <label for="">Ghi chú</label>
-                            <input type="text" name="ghichu" class="form-control" id="ghichu-edit"
+                            <input required type="text" name="ghichu" class="form-control" id="ghichu-edit"
                                 placeholder="Nhập ghi chú">
                         </div>
 
@@ -160,8 +160,8 @@
                         @csrf
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Edit</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-primary">Sửa</button>
                     </div>
                 </form>
             </div>
@@ -217,11 +217,11 @@
                             response.data.tenkhoa + '</td>' +
                             '<td><button data-url="/admin/subjects/edit/' + response.data
                             .mamh + '" type="button" ' +
-                            'data-target="#edit" data-toggle="modal" class="btn btn-warning btn-edit">Edit</button>' +
+                            'data-target="#edit" data-toggle="modal" class="btn btn-warning btn-edit">Sửa</button>' +
                             '<button data-url="/admin/subjects/destroy/' + response.data
                             .mamh +
                             '"​ type="button" style="margin-left: 5px;" data-target="#delete" ' +
-                            ' data-toggle="modal"class="btn btn-danger btn-delete">Delete</button></td>'
+                            ' data-toggle="modal"class="btn btn-danger btn-delete">Xóa</button></td>'
                         );
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
@@ -250,7 +250,7 @@
                         $('#makhoa-edit').val(response.data.makhoa);
                         $('#form-edit').attr('data-url',
                             '{{ asset('/admin/subjects/edit') }}/' +
-                            response.data.namhoc + '/' + response.data.hocky);
+                            response.data.mamh);
                     },
                     error: function(error) {}
                 })

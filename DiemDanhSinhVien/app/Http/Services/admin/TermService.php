@@ -101,4 +101,70 @@ class TermService
         $sv = DB::table('giangvien_monhoc')->where('mahp', $mahp)->delete();
         return $sv;
     }
+
+    // Excel
+    public function storeXLSX($request)
+    {
+        try {
+            $arrList = $request->input('arr');
+            // dd($arrList[0]['Mã học phần']);
+            $len = count($arrList);
+            $arrResult = [];
+            for ($i = 0; $i < $len; $i++) {
+                // Table lớp học phần
+                DB::table('giangvien_monhoc')->insert([
+                    'mahp' => $arrList[$i]['Mã học phần'],
+                    'magv_id' => $arrList[$i]['Mã giảng viên'],
+                    'mamh_id' => $arrList[$i]['Mã môn học'],
+                    'namhoc_id' => $arrList[$i]['Năm học'],
+                    'hocky_id' => $arrList[$i]['Học kỳ']
+                ]);
+                $item = DB::table('giangvien_monhoc')
+                    ->join('monhocs', 'giangvien_monhoc.mamh_id', 'monhocs.mamh')
+                    ->join('giangviens', 'giangvien_monhoc.magv_id', 'giangviens.magv')
+                    ->where('mahp', $arrList[$i]['Mã học phần'])
+                    ->get()[0];
+                array_push($arrResult, $item);
+                // table ca học
+                $tuanbd = $arrList[$i]['Tuần bắt đầu'];
+                $tuankt = $arrList[$i]['Tuần kết thúc'];
+                $ngay  = $arrList[$i]['Ngày'];
+                if ($tuanbd > $tuankt) continue;
+                for ($a = $tuanbd; $a <= $tuankt; $a++) {
+                    DB::table('cahoc_giangvien_monhoc')->insert([
+                        'mahp_id' => $arrList[$i]['Mã học phần'],
+                        'macahoc_id' => $arrList[$i]['Mã ca học'],
+                        'tuan' => $a,
+                        'ngay' => $ngay,
+                        'thu' => $arrList[$i]['Thứ'],
+                        'buoi' => $arrList[$i]['Buổi'],
+                        'maphong_id' => $arrList[$i]['Mã phòng']
+                    ]);
+                    $ngay = date('Y-m-d', strtotime($ngay . " + 7 day"));
+                }
+            }
+            return $arrResult;
+        } catch (\Exception $err) {
+            Log::info($err->getMessage());
+        }
+        return null;
+    }
+    // Filter
+    public function LayHP($request)
+    {
+        $khoa = $request->input('khoa');
+        $namhoc = $request->input('namhoc');
+        $hocky = $request->input('hocky');
+        if ($khoa == "All") $khoa = "";
+        if ($namhoc == "All") $namhoc = "";
+        if ($hocky == "All") $hocky = "";
+        return DB::table('giangvien_monhoc')
+            ->join('monhocs', 'giangvien_monhoc.mamh_id', 'monhocs.mamh')
+            ->join('khoas', 'khoas.makhoa', 'monhocs.makhoa_id')
+            ->join('giangviens', 'giangvien_monhoc.magv_id', 'giangviens.magv')
+            ->where('makhoa', 'like', '%' . $khoa . '%')
+            ->where('namhoc_id', 'like', '%' . $namhoc . '%')
+            ->where('hocky_id', 'like', '%' . $hocky . '%')
+            ->get();
+    }
 }

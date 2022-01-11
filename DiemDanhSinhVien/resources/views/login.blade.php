@@ -174,10 +174,11 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-lg-9 col-md-8">
-                            <div id="ViewDanhSachTinTuc"></div>
+
                         </div>
                         <div class="col-lg-3 col-md-4">
-                            <div class="bg-form authfy-login" style="height: 583px">
+                            <div class="bg-form authfy-login"
+                                style="height: 583px; background: url(/template/teacher/Assets/images/backgroundform.jpg) center center no-repeat; background-size: cover;">
                                 <div class="form-wrap h-100 w-100">
                                     <div class="authfy-panel panel-login active">
                                         <!-- Formmmmmmmmmmm -->
@@ -206,12 +207,6 @@
 
                                                     {{-- <input id="remember" name="remember" type="checkbox" value="true" /> --}}
 
-                                                    <div class="text-right">
-                                                        <label>
-                                                            <input id="remember" name="remember" type="checkbox"
-                                                                value="true" />
-                                                            Đã tốt nghiệp</label>
-                                                    </div>
                                                 </div>
                                                 @include('alert')
                                                 <input type="submit" class="button" value="Đăng nhập" />

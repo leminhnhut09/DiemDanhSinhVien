@@ -1,7 +1,8 @@
 @extends('admin.main2')
 @section('content')
     <div class="container">
-        <a href="#" class="btn btn-success btn-add" data-target="#modal-add" data-toggle="modal">Add</a>
+        <a href="#" class="btn btn-success btn-add" data-target="#modal-add" style="margin:8px;" data-toggle="modal">Thêm
+            Khoa</a>
         <div class="table-responsive">
             <table class="table table-hover">
                 <thead>
@@ -9,6 +10,7 @@
                         <th>Mã Khoa</th>
                         <th>Tên Khoa</th>
                         <th>Ngày thành lập</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -19,10 +21,9 @@
                             <td id="ngaythanhlap-{{ $faculty->makhoa }}">{{ $faculty->ngaythanhlap }}</td>
                             <td>
                                 <button data-url="{{ route('facultys.edit', $faculty->makhoa) }}" ​ type="button"
-                                    data-target="#edit" data-toggle="modal" class="btn btn-warning btn-edit">Edit</button>
+                                    data-target="#edit" data-toggle="modal" class="btn btn-warning btn-edit">Sửa</button>
                                 <button data-url="{{ route('facultys.destroy', $faculty->makhoa) }}" ​ type="button"
-                                    data-target="#delete" data-toggle="modal"
-                                    class="btn btn-danger btn-delete">Delete</button>
+                                    data-target="#delete" data-toggle="modal" class="btn btn-danger btn-delete">Xóa</button>
                             </td>
                         </tr>
                     @endforeach
@@ -74,11 +75,11 @@
                             '</td>' +
                             '<td><button data-url="/admin/facultys/edit/' + response.data
                             .makhoa + '" type="button" ' +
-                            'data-target="#edit" data-toggle="modal" class="btn btn-warning btn-edit">Edit</button>' +
+                            'data-target="#edit" data-toggle="modal" class="btn btn-warning btn-edit">Sửa</button>' +
                             '<button data-url="/admin/facultys/destroy/' + response.data
                             .makhoa +
                             '"​ type="button" style="margin-left: 5px;" data-target="#delete" ' +
-                            ' data-toggle="modal"class="btn btn-danger btn-delete">Delete</button></td>'
+                            ' data-toggle="modal"class="btn btn-danger btn-delete">Xóa</button></td>'
                         );
                     },
                     error: function(jqXHR, textStatus, errorThrown) {

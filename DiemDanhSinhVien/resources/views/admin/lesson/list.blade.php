@@ -1,7 +1,8 @@
 @extends('admin.main2')
 @section('content')
     <div class="container">
-        <a href="#" class="btn btn-success btn-add" data-target="#modal-add" data-toggle="modal">Add</a>
+        <a href="#" style="margin:8px;" class="btn btn-success btn-add" data-target="#modal-add" data-toggle="modal">Thêm ca
+            học</a>
         <div class="table-responsive">
             <table class="table table-hover">
                 <thead>
@@ -23,10 +24,9 @@
                             <td id="tkt-{{ $lesson->macahoc }}">{{ $lesson->tietkt }}</td>
                             <td>
                                 <button data-url="{{ route('lesson.edit', $lesson->macahoc) }}" ​ type="button"
-                                    data-target="#edit" data-toggle="modal" class="btn btn-warning btn-edit">Edit</button>
+                                    data-target="#edit" data-toggle="modal" class="btn btn-warning btn-edit">Sửa</button>
                                 <button data-url="{{ route('lesson.destroy', $lesson->macahoc) }}" ​ type="button"
-                                    data-target="#delete" data-toggle="modal"
-                                    class="btn btn-danger btn-delete">Delete</button>
+                                    data-target="#delete" data-toggle="modal" class="btn btn-danger btn-delete">Xóa</button>
                             </td>
                         </tr>
                     @endforeach
@@ -48,7 +48,7 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="name">Mã ca học</label>
-                            <input type="text" name="macahoc" class="form-control" id="macahoc-add"
+                            <input required type="text" name="macahoc" class="form-control" id="macahoc-add"
                                 placeholder="Nhập mã ca học">
                         </div>
 
@@ -66,19 +66,19 @@
 
                         <div class="form-group">
                             <label for="">Tiết bắt đầu</label>
-                            <input type="number" name="tietbd" class="form-control" id="tietbd-add"
+                            <input required type="number" name="tietbd" class="form-control" id="tietbd-add"
                                 placeholder="Nhập tiết bắt đầu">
                         </div>
                         <div class="form-group">
                             <label for="">Tiết kết thúc</label>
-                            <input type="number" name="tietkt" class="form-control" id="tietkt-add"
+                            <input required type="number" name="tietkt" class="form-control" id="tietkt-add"
                                 placeholder="Nhập tiết kết thúc">
                         </div>
                         @csrf
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Add</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-primary">Thêm</button>
                     </div>
                 </form>
             </div>
@@ -97,7 +97,7 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="name">Mã ca học</label>
-                            <input type="text" name="macahoc" class="form-control" id="macahoc-edit"
+                            <input readonly type="text" name="macahoc" class="form-control" id="macahoc-edit"
                                 placeholder="Nhập mã ca học">
                         </div>
 
@@ -115,19 +115,19 @@
 
                         <div class="form-group">
                             <label for="">Tiết bắt đầu</label>
-                            <input type="number" name="tietbd" class="form-control" id="tietbd-edit"
+                            <input required type="number" name="tietbd" class="form-control" id="tietbd-edit"
                                 placeholder="Nhập tiết bắt đầu">
                         </div>
                         <div class="form-group">
                             <label for="">Tiết kết thúc</label>
-                            <input type="number" name="tietkt" class="form-control" id="tietkt-edit"
+                            <input required type="number" name="tietkt" class="form-control" id="tietkt-edit"
                                 placeholder="Nhập tiết kết thúc">
                         </div>
                         @csrf
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Edit</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-primary">Sửa</button>
                     </div>
                 </form>
             </div>
@@ -181,11 +181,11 @@
                             '</td>' +
                             '<td><button data-url="/admin/lesson/edit/' + response.data
                             .macahoc + '" type="button" ' +
-                            'data-target="#edit" data-toggle="modal" class="btn btn-warning btn-edit">Edit</button>' +
+                            'data-target="#edit" data-toggle="modal" class="btn btn-warning btn-edit">Sửa</button>' +
                             '<button data-url="/admin/lesson/destroy/' + response.data
                             .macahoc +
                             '"​ type="button" style="margin-left: 5px;" data-target="#delete" ' +
-                            ' data-toggle="modal"class="btn btn-danger btn-delete">Delete</button></td>'
+                            ' data-toggle="modal"class="btn btn-danger btn-delete">Xóa</button></td>'
                         );
                     },
                     error: function(jqXHR, textStatus, errorThrown) {

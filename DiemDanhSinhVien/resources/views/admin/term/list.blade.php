@@ -1,32 +1,72 @@
 @extends('admin.main2')
 @section('content')
     <div class="container">
-        <a href="#" class="btn btn-success btn-add" data-target="#modal-add" data-toggle="modal">Add</a>
+        <a href="#" class="btn btn-success btn-add" style="margin:8px;" data-target="#modal-add" data-toggle="modal">Thêm lớp
+            học
+            phần</a>
+        <a id="click-file-excel" href="#" style="margin:8px;" class="btn btn-success btn-add" data-target="#modal-import"
+            data-toggle="modal">Import file</a>
+        {{-- Filter --}}
+        <div style="display: flex; justify-content: space-evenly">
+            <div class="form-group"
+                style="width:30%; display: flex; align-items: center; justify-content: center; margin-top: 17px; margin-bottom:25px;">
+                <label style="width:auto; margin-right: 10px" for="">Khoa</label>
+                <select style="width:200px;" name="makhoa" id="makhoa-filter" class="form-control" required="required">
+                    <option value="All">Tất cả</option>
+                    @foreach ($facultys as $faculty) {
+                        <option value="{{ $faculty->makhoa }}">{{ $faculty->tenkhoa }}</option>
+                        }
+                    @endforeach
+                </select>
+            </div>
+            <div class="form-group"
+                style="width:30%; display: flex; align-items: center; justify-content: center; margin-top: 17px; margin-bottom:25px;">
+                <label style="width:auto; margin-right: 10px " for="">Năm học</label>
+                <select style="width:200px;" name="namhoc" id="namhoc-filter" class="form-control" required="required">
+                    <option value="All">Tất cả</option>
+                    @foreach ($years as $year) {
+                        <option value="{{ $year->namhoc }}">{{ $year->namhoc }}</option>
+                        }
+                    @endforeach
+                </select>
+            </div>
+            <div class="form-group"
+                style="width:30%; display: flex; align-items: center; justify-content: center; margin-top: 17px; margin-bottom:25px;">
+                <label style="width:auto; margin-right: 10px" for="">Học kỳ</label>
+                <select style="width:140px;" name="hocky" id="hocky-filter" class="form-control" required="required">
+                    <option value="All">Tất cả</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                </select>
+            </div>
+        </div>
+        {{-- End filter --}}
         <div class="table-responsive">
-            <table class="table table-hover">
+            <table style="text-align: center;" class="table table-hover">
                 <thead>
                     <tr>
-                        <th>Mã học phần</th>
-                        <th>Tên học phần</th>
-                        <th>Tên giảng viên</th>
-                        <th>Năm học</th>
-                        <th>Học kỳ</th>
+                        <th style="min-width: 100px;">Mã học phần</th>
+                        <th style="min-width: 140px;">Tên học phần</th>
+                        <th style="min-width: 120px;">Tên giảng viên</th>
+                        <th style="min-width: 60px;">Năm học</th>
+                        <th style="min-width: 60px;">Học kỳ</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="table-body">
                     @foreach ($terms as $term)
                         <tr>
-                            <td id="{{ $term->mahp }}">{{ $term->mahp }}</td>
-                            <td id="tenhp-{{ $term->mahp }}">{{ $term->tenmh }}</td>
-                            <td id="tengv-{{ $term->mahp }}">{{ $term->tengv }}</td>
-                            <td id="namhoc-{{ $term->mahp }}">{{ $term->namhoc_id }}</td>
-                            <td id="hocky-{{ $term->mahp }}">{{ $term->hocky_id }}</td>
+                            <td style="vertical-align: middle;" id="{{ $term->mahp }}">{{ $term->mahp }}</td>
+                            <td style="vertical-align: middle;" id="tenhp-{{ $term->mahp }}">{{ $term->tenmh }}</td>
+                            <td style="vertical-align: middle;" id="tengv-{{ $term->mahp }}">{{ $term->tengv }}</td>
+                            <td style="vertical-align: middle;" id="namhoc-{{ $term->mahp }}">{{ $term->namhoc_id }}
+                            </td>
+                            <td style="vertical-align: middle;" id="hocky-{{ $term->mahp }}">{{ $term->hocky_id }}
+                            </td>
                             <td>
                                 <button data-url="{{ route('term.edit', $term->mahp) }}" ​ type="button"
-                                    data-target="#edit" data-toggle="modal" class="btn btn-warning btn-edit">Edit</button>
+                                    data-target="#edit" data-toggle="modal" class="btn btn-warning btn-edit">Sửa</button>
                                 <button data-url="{{ route('term.destroy', $term->mahp) }}" ​ type="button"
-                                    data-target="#delete" data-toggle="modal"
-                                    class="btn btn-danger btn-delete">Delete</button>
+                                    data-target="#delete" data-toggle="modal" class="btn btn-danger btn-delete">Xóa</button>
                             </td>
                         </tr>
                     @endforeach
@@ -48,7 +88,7 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="name">Mã học phần</label>
-                            <input type="text" name="mahp" class="form-control" id="mahp-add"
+                            <input required type="text" name="mahp" class="form-control" id="mahp-add"
                                 placeholder="Nhập mã học phần">
                         </div>
 
@@ -95,8 +135,8 @@
                         @csrf
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Add</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-primary">Thêm</button>
                     </div>
                 </form>
             </div>
@@ -115,7 +155,7 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="name">Mã học phần</label>
-                            <input type="text" name="mahp" class="form-control" id="mahp-edit"
+                            <input readonly type="text" name="mahp" class="form-control" id="mahp-edit"
                                 placeholder="Nhập mã học phần">
                         </div>
 
@@ -161,8 +201,33 @@
                         @csrf
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Edit</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-primary">Sửa</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {{-- import file --}}
+    <div class="modal fade" id="modal-import">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="" id="form-import" role="form">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Import file</h4>
+                        <button type="button" class="close" data-dismiss="modal"
+                            aria-hidden="true">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="">Chọn file</label>
+                            <input type="file" id="file-excel" name="file-excel">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                        <a id="import-excel" href="#" style="margin:8px;" class="btn btn-success btn-add">Import
+                            file</a>
                     </div>
                 </form>
             </div>
@@ -170,8 +235,10 @@
     </div>
 
 
+
     {{-- @include('admin.classer.add') --}}
     {{-- @include('admin.facultys.edit') --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
@@ -233,6 +300,142 @@
             });
         });
         $(document).ready(function() {
+            // import file
+            let selectedFile;
+            $(document).on('change', '#click-file-excel', function() {
+                selectedFile = event.target.files[0];
+                console.log(selectedFile);
+            })
+            $(document).on('change', '#file-excel', function() {
+                selectedFile = event.target.files[0];
+                console.log(selectedFile);
+            })
+            $(document).on('click', '#import-excel', function() {
+                if (selectedFile) {
+                    console.log('import');
+                    let fileReader = new FileReader();
+                    fileReader.readAsBinaryString(selectedFile);
+                    fileReader.onload = (event) => {
+                        let data = event.target.result;
+                        let workbook = XLSX.read(data, {
+                            type: "binary"
+                        });
+                        workbook.SheetNames.forEach(sheet => {
+                            let rowObject = XLSX.utils.sheet_to_row_object_array(workbook
+                                .Sheets[sheet]);
+                            console.log(rowObject);
+                            $.ajax({
+                                type: 'post',
+                                datatype: "JSON",
+                                url: '/admin/term/addXLSX',
+                                data: {
+                                    arr: rowObject
+                                },
+                                success: function(response) {
+                                    toastr.success(response.message)
+                                    $('#modal-import').modal('hide');
+                                    console.log(response.data);
+                                    if (response.data == null) return;
+                                    for (var i = 0; i < response.data.length; i++) {
+                                        $('tbody').prepend(
+                                            '<tr><td style="vertical-align: middle;" id = "' +
+                                            response.data[i]
+                                            .mahp + '" > ' +
+                                            response.data[i].mahp +
+                                            '</td><td style="vertical-align: middle;" id="tenhp-' +
+                                            response
+                                            .data[i]
+                                            .mahp + '">' +
+                                            response.data[i].tenmh +
+                                            '</td><td style="vertical-align: middle;" id="tengv-' +
+                                            response
+                                            .data[i].mahp + '">' + response
+                                            .data[i]
+                                            .tengv +
+                                            '</td><td style="vertical-align: middle;" id="namhoc-' +
+                                            response
+                                            .data[i]
+                                            .mahp + '">' +
+                                            response.data[i].namhoc_id +
+                                            '</td><td style="vertical-align: middle;" id="hocky-' +
+                                            response
+                                            .data[i]
+                                            .mahp + '">' +
+                                            response.data[i].hocky_id +
+                                            '</td>' +
+                                            '<td><button data-url="/admin/term/edit/' +
+                                            response.data[i]
+                                            .mahp + '" type="button" ' +
+                                            'data-target="#edit" data-toggle="modal" class="btn btn-warning btn-edit">Sửa</button>' +
+                                            '<button data-url="/admin/term/destroy/' +
+                                            response.data[i]
+                                            .mahp +
+                                            '"​ type="button" style="margin-left: 5px;" data-target="#delete" ' +
+                                            ' data-toggle="modal"class="btn btn-danger btn-delete">Xóa</button></td>'
+                                        );
+                                    }
+
+                                },
+                                error: function(jqXHR, textStatus, errorThrown) {
+                                    //xử lý lỗi tại đây
+                                    console.log('err');
+                                }
+                            })
+
+                        });
+                    }
+                }
+            })
+            // end import file
+            function buildTable(data) {
+                var table = document.getElementById('table-body')
+                table.innerHTML = ''
+                for (var i = 0; i < data.length; i++) {
+                    row = '<tr><td style="vertical-align: middle;" id = "' +
+                        data[i].mahp + '" > ' + data[i].mahp +
+                        '</td><td style="vertical-align: middle;" id="tenhp-' +
+                        data[i].mahp + '">' + data[i].tenmh +
+                        '</td><td style="vertical-align: middle;" id="tengv-' +
+                        data[i].mahp + '">' + data[i].tengv +
+                        '</td><td style="vertical-align: middle;" id="namhoc-' + data[i].mahp + '">' +
+                        data[i].namhoc_id + '</td><td style="vertical-align: middle;" id="hocky-' +
+                        data[i].mahp + '">' + data[i].hocky_id + '</td>' +
+                        '<td><button data-url="/admin/term/edit/' + data[i]
+                        .mahp + '" type="button" ' +
+                        'data-target="#edit" data-toggle="modal" class="btn btn-warning btn-edit">Sửa</button>' +
+                        '<button data-url="/admin/term/destroy/' + data[i]
+                        .mahp +
+                        '"​ type="button" style="margin-left: 5px;" data-target="#delete" ' +
+                        ' data-toggle="modal"class="btn btn-danger btn-delete">Xóa</button></td>'
+                    table.innerHTML += row
+                }
+            }
+
+            // filter
+            $(document).on('change', '#makhoa-filter, #namhoc-filter, #hocky-filter', function(e) {
+                e.preventDefault();
+                $.ajax({
+                    type: 'put',
+                    url: '/admin/term/filter',
+                    data: {
+                        khoa: $('#makhoa-filter').val(),
+                        namhoc: $('#namhoc-filter').val(),
+                        hocky: $('#hocky-filter').val()
+                    },
+                    success: function(response) {
+                        console.log(response.data);
+
+                        buildTable(response.data);
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        //xử lý lỗi tại đây
+                    }
+                })
+
+            })
+            // end filter
+
+
             $('#form-add').submit(function(e) {
                 e.preventDefault();
                 var url = $(this).attr('data-url');
@@ -249,23 +452,31 @@
                     success: function(response) {
                         toastr.success(response.message)
                         $('#modal-add').modal('hide');
-                        $('tbody').prepend('<tr><td id = "' + response.data.mahp + '" > ' +
-                            response.data.mahp + '</td><td id="tenhp-' + response.data
+                        $('tbody').prepend('<tr><td style="vertical-align: middle;" id = "' +
+                            response.data.mahp + '" > ' +
+                            response.data.mahp +
+                            '</td><td style="vertical-align: middle;" id="tenhp-' + response
+                            .data
                             .mahp + '">' +
-                            response.data.tenmh + '</td><td id="tengv-' + response
+                            response.data.tenmh +
+                            '</td><td style="vertical-align: middle;" id="tengv-' + response
                             .data.mahp + '">' + response.data.tengv +
-                            '</td><td id="namhoc-' + response.data
+                            '</td><td style="vertical-align: middle;" id="namhoc-' +
+                            response
+                            .data
                             .mahp + '">' +
-                            response.data.namhoc_id + '</td><td id="hocky-' + response.data
+                            response.data.namhoc_id +
+                            '</td><td style="vertical-align: middle;" id="hocky-' + response
+                            .data
                             .mahp + '">' +
                             response.data.hocky_id + '</td>' +
                             '<td><button data-url="/admin/term/edit/' + response.data
                             .mahp + '" type="button" ' +
-                            'data-target="#edit" data-toggle="modal" class="btn btn-warning btn-edit">Edit</button>' +
+                            'data-target="#edit" data-toggle="modal" class="btn btn-warning btn-edit">Sửa</button>' +
                             '<button data-url="/admin/term/destroy/' + response.data
                             .mahp +
                             '"​ type="button" style="margin-left: 5px;" data-target="#delete" ' +
-                            ' data-toggle="modal"class="btn btn-danger btn-delete">Delete</button></td>'
+                            ' data-toggle="modal"class="btn btn-danger btn-delete">Xóa</button></td>'
                         );
                     },
                     error: function(jqXHR, textStatus, errorThrown) {

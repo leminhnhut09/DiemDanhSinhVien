@@ -1,7 +1,8 @@
 @extends('admin.main2')
 @section('content')
     <div class="container">
-        <a href="#" class="btn btn-success btn-add" data-target="#modal-add" data-toggle="modal">Add</a>
+        <a href="#" class="btn btn-success btn-add" style="margin:8px;" data-target="#modal-add" data-toggle="modal">Thêm
+            phòng học</a>
         <div class="table-responsive">
             <table class="table table-hover">
                 <thead>
@@ -19,10 +20,9 @@
                             <td id="succhua-{{ $room->maphong }}">{{ $room->succhua }}</td>
                             <td>
                                 <button data-url="{{ route('room.edit', $room->maphong) }}" ​ type="button"
-                                    data-target="#edit" data-toggle="modal" class="btn btn-warning btn-edit">Edit</button>
+                                    data-target="#edit" data-toggle="modal" class="btn btn-warning btn-edit">Sửa</button>
                                 <button data-url="{{ route('room.destroy', $room->maphong) }}" ​ type="button"
-                                    data-target="#delete" data-toggle="modal"
-                                    class="btn btn-danger btn-delete">Delete</button>
+                                    data-target="#delete" data-toggle="modal" class="btn btn-danger btn-delete">Xóa</button>
                             </td>
                         </tr>
                     @endforeach
@@ -44,26 +44,26 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="name">Mã phòng học</label>
-                            <input type="text" name="maphong" class="form-control" id="maphong-add"
+                            <input required type="text" name="maphong" class="form-control" id="maphong-add"
                                 placeholder="Nhập mã phòng học">
                         </div>
 
                         <div class="form-group">
                             <label for="description">Tên phòng học</label>
-                            <input type="text" name="tenphong" class="form-control" id="tenphong-add"
+                            <input required type="text" name="tenphong" class="form-control" id="tenphong-add"
                                 placeholder="Nhập tên phòng học">
                         </div>
 
                         <div class="form-group">
                             <label for="">Sức chứa</label>
-                            <input type="number" name="succhua" class="form-control" id="succhua-add"
+                            <input required type="number" name="succhua" class="form-control" id="succhua-add"
                                 placeholder="Nhập sức chứa">
                         </div>
                         @csrf
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Add</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-primary">Thêm</button>
                     </div>
                 </form>
             </div>
@@ -82,26 +82,26 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="name">Mã phòng học</label>
-                            <input type="text" name="maphong" class="form-control" id="maphong-edit"
+                            <input readonly type="text" name="maphong" class="form-control" id="maphong-edit"
                                 placeholder="Nhập mã phòng học">
                         </div>
 
                         <div class="form-group">
                             <label for="description">Tên phòng học</label>
-                            <input type="text" name="tenphong" class="form-control" id="tenphong-edit"
+                            <input required type="text" name="tenphong" class="form-control" id="tenphong-edit"
                                 placeholder="Nhập tên phòng học">
                         </div>
 
                         <div class="form-group">
                             <label for="">Sức chứa</label>
-                            <input type="number" name="succhua" class="form-control" id="succhua-edit"
+                            <input required type="number" name="succhua" class="form-control" id="succhua-edit"
                                 placeholder="Nhập sức chứa">
                         </div>
                         @csrf
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Edit</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-primary">Sửa</button>
                     </div>
                 </form>
             </div>
@@ -148,11 +148,11 @@
                             '</td>' +
                             '<td><button data-url="/admin/room/edit/' + response.data
                             .maphong + '" type="button" ' +
-                            'data-target="#edit" data-toggle="modal" class="btn btn-warning btn-edit">Edit</button>' +
+                            'data-target="#edit" data-toggle="modal" class="btn btn-warning btn-edit">Sửa</button>' +
                             '<button data-url="/admin/room/destroy/' + response.data
                             .maphong +
                             '"​ type="button" style="margin-left: 5px;" data-target="#delete" ' +
-                            ' data-toggle="modal"class="btn btn-danger btn-delete">Delete</button></td>'
+                            ' data-toggle="modal"class="btn btn-danger btn-delete">Xóa</button></td>'
                         );
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
@@ -215,11 +215,11 @@
                         type: 'delete',
                         url: url,
                         success: function(response) {
-                            toastr.success('Xóa môn học thành công!')
+                            toastr.success('Xóa phòng học thành công!')
                             _this.parent().parent().remove();
                         },
                         error: function(jqXHR, textStatus, errorThrown) {
-                            toastr.success('Xóa môn học thất bại!')
+                            toastr.success('Xóa phòng học thất bại!')
                         }
                     })
                 }

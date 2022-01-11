@@ -1,7 +1,8 @@
 @extends('admin.main2')
 @section('content')
     <div class="container">
-        <a href="#" class="btn btn-success btn-add" data-target="#modal-add" data-toggle="modal">Add</a>
+        <a href="#" class="btn btn-success btn-add" data-target="#modal-add" style="margin:8px;" data-toggle="modal">Thêm
+            giảng viên</a>
         <div class="table-responsive">
             <table class="table table-hover">
                 <thead>
@@ -34,10 +35,9 @@
                             <td id="tenkhoa-{{ $teacher->magv }}">{{ $teacher->tenkhoa }}</td>
                             <td>
                                 <button data-url="{{ route('teacherM.edit', $teacher->magv) }}" ​ type="button"
-                                    data-target="#edit" data-toggle="modal" class="btn btn-warning btn-edit">Edit</button>
+                                    data-target="#edit" data-toggle="modal" class="btn btn-warning btn-edit">Sửa</button>
                                 <button data-url="{{ route('teacherM.destroy', $teacher->magv) }}" ​ type="button"
-                                    data-target="#delete" data-toggle="modal"
-                                    class="btn btn-danger btn-delete">Delete</button>
+                                    data-target="#delete" data-toggle="modal" class="btn btn-danger btn-delete">Xóa</button>
                             </td>
                         </tr>
                     @endforeach
@@ -59,13 +59,13 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="name">Mã giảng viên</label>
-                            <input type="text" name="magv" class="form-control" id="magv-add"
+                            <input required type="text" name="magv" class="form-control" id="magv-add"
                                 placeholder="Nhập mã giảng viên">
                         </div>
 
                         <div class="form-group">
                             <label for="description">Tên giảng viên</label>
-                            <input type="text" name="tengv" class="form-control" id="tengv-add"
+                            <input required type="text" name="tengv" class="form-control" id="tengv-add"
                                 placeholder="Nhập tên giảng viên">
                         </div>
 
@@ -85,19 +85,19 @@
 
                         <div class="form-group">
                             <label for="">Địa chỉ</label>
-                            <input name="diachi" type="text" class="form-control" id="diachi-add"
+                            <input required name="diachi" type="text" class="form-control" id="diachi-add"
                                 placeholder="Nhập vào địa chỉ">
                         </div>
 
                         <div class="form-group">
                             <label for="">Số điện thoại</label>
-                            <input name="sdt" type="number" class="form-control" id="sdt-add"
+                            <input required name="sdt" type="number" class="form-control" id="sdt-add"
                                 placeholder="Nhập vào số điện thoại">
                         </div>
 
                         <div class="form-group">
                             <label for="menu">Ảnh</label>
-                            <input type="file" name="file" class="form-control" id="upload-add">
+                            <input required type="file" name="file" class="form-control" id="upload-add">
                             <div id="image_show-add">
                             </div>
                             <input type="hidden" name="thumb" id="thumb-add">
@@ -115,8 +115,8 @@
                         @csrf
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Add</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-primary">Thêm</button>
                     </div>
                 </form>
             </div>
@@ -135,13 +135,13 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="name">Mã giảng viên</label>
-                            <input type="text" name="magv" class="form-control" id="magv-edit"
+                            <input readonly type="text" name="magv" class="form-control" id="magv-edit"
                                 placeholder="Nhập mã giảng viên">
                         </div>
 
                         <div class="form-group">
                             <label for="description">Tên giảng viên</label>
-                            <input type="text" name="tengv" class="form-control" id="tengv-edit"
+                            <input requiredtype="text" name="tengv" class="form-control" id="tengv-edit"
                                 placeholder="Nhập tên giảng viên">
                         </div>
 
@@ -161,13 +161,13 @@
 
                         <div class="form-group">
                             <label for="">Địa chỉ</label>
-                            <input name="diachi" type="text" class="form-control" id="diachi-edit"
+                            <input required name="diachi" type="text" class="form-control" id="diachi-edit"
                                 placeholder="Nhập vào địa chỉ">
                         </div>
 
                         <div class="form-group">
                             <label for="">Số điện thoại</label>
-                            <input name="sdt" type="number" class="form-control" id="sdt-edit"
+                            <input required name="sdt" type="number" class="form-control" id="sdt-edit"
                                 placeholder="Nhập vào số điện thoại">
                         </div>
 
@@ -191,8 +191,8 @@
                         @csrf
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Edit</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-primary">Cập nhật</button>
                     </div>
                 </form>
             </div>
@@ -316,11 +316,11 @@
                             response.data.tenkhoa + '</td>' +
                             '<td><button data-url="/admin/teacherM/edit/' + response.data
                             .magv + '" type="button" ' +
-                            'data-target="#edit" data-toggle="modal" class="btn btn-warning btn-edit">Edit</button>' +
+                            'data-target="#edit" data-toggle="modal" class="btn btn-warning btn-edit">Sửa</button>' +
                             '<button data-url="/admin/teacherM/destroy/' + response.data
                             .magv +
                             '"​ type="button" style="margin-left: 5px;" data-target="#delete" ' +
-                            ' data-toggle="modal"class="btn btn-danger btn-delete">Delete</button></td>'
+                            ' data-toggle="modal"class="btn btn-danger btn-delete">Xóa</button></td>'
                         );
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
